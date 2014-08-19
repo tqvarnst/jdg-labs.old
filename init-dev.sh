@@ -1,5 +1,5 @@
 #!/bin/bash 
-DEMO="JDG Workshop Labs - Dev "
+DEMO="JDG Workshop Labs - Dev environment "
 AUTHORS="Thomas Qvarnstrom, Red Hat <tqvarnst@redhat.com>"
 SRC_DIR=./installs
 JBDS=jbdevstudio-product-universal-7.1.1.GA-v20140314-2145-B688.jar
@@ -15,7 +15,7 @@ clear
 
 echo
 
-ASCII_WIDTH=50
+ASCII_WIDTH=52
 
 printf "##  %-${ASCII_WIDTH}s  ##\n" | sed -e 's/ /#/g'
 printf "##  %-${ASCII_WIDTH}s  ##\n"   
@@ -94,7 +94,7 @@ fi
 # Configure settings.xml
 echo "Generating settings.xml from the current location"
 echo "  - either copy this to ~/.m2/ or use with mvn -s <path to settingsfile>"
-cp example-settings.xml settings.xml
+cp example-settings.xml target/settings.xml
 
 pushd $MVN_REPO/jboss-datagrid-6.3.0-maven-repository > /dev/null
 jdg_mvn_repo_path=`pwd`
@@ -104,11 +104,7 @@ pushd $MVN_REPO/jboss-eap-6.3.0.GA-maven-repository > /dev/null
 eap63_mvn_repo_path=`pwd`
 popd > /dev/null
 
-sed -i '' "s;file:///path/to/repo/jboss-datagrid-maven-repository;file://${jdg_mvn_repo_path};g" settings.xml
-sed -i '' "s;file:///path/to/repo/jboss-eap-6.3.0.GA-maven-repository;file://${eap63_mvn_repo_path};g" settings.xml
-
-
-#sed -i .bak "s/file:\/\/\/path\/to\/repo\/jboss-datagrid-maven-repository/test/g" ./settings.xml
-
+sed -i '' "s;file:///path/to/repo/jboss-datagrid-maven-repository;file://${jdg_mvn_repo_path};g" target/settings.xml
+sed -i '' "s;file:///path/to/repo/jboss-eap-6.3.0.GA-maven-repository;file://${eap63_mvn_repo_path};g" target/settings.xml
 
 echo "Done setting up environment"

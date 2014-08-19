@@ -1,3 +1,6 @@
 *.zip
 *.jar
 target
+.classpath
+.project
+.settings

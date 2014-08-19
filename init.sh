@@ -1,5 +1,5 @@
 #!/bin/bash 
-DEMO="JDG Workshop Labs"
+DEMO="JDG Workshop Labs - Server environment"
 JBOSS_HOME=./target/jboss-eap-6.3
 JDG_HOME=./target/jboss-datagrid-6.3.0-server
 SERVER_DIR=$JBOSS_HOME/standalone/deployments/
@@ -10,6 +10,32 @@ EAP=jboss-eap-6.3.0.zip
 JDG_SERVER=jboss-datagrid-6.3.0-server.zip
 JDG_LIBRARY_MODUELS=jboss-datagrid-6.3.0-eap-modules-library.zip
 HOTROD_MODULES=jboss-datagrid-6.3.0-eap-modules-hotrod-java-client.zip
+
+# wipe screen.
+clear 
+
+echo
+
+ASCII_WIDTH=50
+
+printf "##  %-${ASCII_WIDTH}s  ##\n" | sed -e 's/ /#/g'
+printf "##  %-${ASCII_WIDTH}s  ##\n"   
+printf "##  %-${ASCII_WIDTH}s  ##\n" "Setting up the ${DEMO}"
+printf "##  %-${ASCII_WIDTH}s  ##\n"
+printf "##  %-${ASCII_WIDTH}s  ##\n"
+printf "##  %-${ASCII_WIDTH}s  ##\n" "    # ####   ###   ###  ###   ###   ###"
+printf "##  %-${ASCII_WIDTH}s  ##\n" "    # #   # #   # #    #      #  # #"
+printf "##  %-${ASCII_WIDTH}s  ##\n" "    # ####  #   #  ##   ##    #  # #  ##"
+printf "##  %-${ASCII_WIDTH}s  ##\n" "#   # #   # #   #    #    #   #  # #   #"
+printf "##  %-${ASCII_WIDTH}s  ##\n" " ###  ####   ###  ###  ###    ###   ###"  
+printf "##  %-${ASCII_WIDTH}s  ##\n"
+printf "##  %-${ASCII_WIDTH}s  ##\n"
+printf "##  %-${ASCII_WIDTH}s  ##\n"   
+printf "##  %-${ASCII_WIDTH}s  ##\n" "brought to you by,"
+printf "##  %-${ASCII_WIDTH}s  ##\n" "${AUTHORS}"
+printf "##  %-${ASCII_WIDTH}s  ##\n"
+printf "##  %-${ASCII_WIDTH}s  ##\n"
+printf "##  %-${ASCII_WIDTH}s  ##\n" | sed -e 's/ /#/g'
 
 
 echo
