@@ -1,9 +1,11 @@
 package org.jboss.infinispan.demo;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.annotation.PostConstruct;
 import javax.cache.annotation.CacheResult;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -35,31 +37,25 @@ public class TaskService {
 	 */
 	@CacheResult
 	public Collection<Task> findAll() {
-		Collection<Task> resultList = cache.values();
-		if(resultList==null) { 
-			final CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			final CriteriaQuery<Task> criteriaQuery = criteriaBuilder.createQuery(Task.class);
-		
-			Root<Task> root = criteriaQuery.from(Task.class);
-			criteriaQuery.select(root);
-			resultList = em.createQuery(criteriaQuery).getResultList();
-		}
-		 return resultList;
+		return cache.values();
 	}
 	
-//	public List<Task> filter(String input) {
-//		final CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-//        final CriteriaQuery<Task> criteriaQuery = criteriaBuilder.createQuery(Task.class);
-//		
-//        Root<Task> root = criteriaQuery.from(Task.class);
-//        criteriaQuery.where(
-//        		criteriaBuilder.like(
-//        				criteriaBuilder.upper(root.get("title").as(String.class)), 
-//        				"%" + input.toUpperCase() + "%"));
-//        return em.createQuery(criteriaQuery).getResultList();
-//	}
+	public List<Task> filter(String input) {
+		log.info("### Querying the database for filtered tasks!!!!");
+		final CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        final CriteriaQuery<Task> criteriaQuery = criteriaBuilder.createQuery(Task.class);
+		
+        Root<Task> root = criteriaQuery.from(Task.class);
+        criteriaQuery.where(
+        		criteriaBuilder.like(
+        				criteriaBuilder.upper(root.get("title").as(String.class)), 
+        				"%" + input.toUpperCase() + "%"));
+        return em.createQuery(criteriaQuery).getResultList();
+	}
 
-	public void create(Task task) {
+	public void insert(Task task) {
+		if(task.getCreatedOn()==null)
+			task.setCreatedOn(new Date());
 		em.persist(task);
 		cache.put(task.getId(),task);
 	}
@@ -68,6 +64,23 @@ public class TaskService {
 	public void update(Task task) {
 		em.merge(task);
 		cache.replace(task.getId(),task);
+	}
+	
+	@PostConstruct
+	public void startup() {
+		
+		log.info("### Querying the database for tasks!!!!");
+		final CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+		final CriteriaQuery<Task> criteriaQuery = criteriaBuilder.createQuery(Task.class);
+	
+		Root<Task> root = criteriaQuery.from(Task.class);
+		criteriaQuery.select(root);
+		Collection<Task> resultList = em.createQuery(criteriaQuery).getResultList();
+		
+		for (Task task : resultList) {
+			this.insert(task);
+		}
+		
 	}
 	
 }
