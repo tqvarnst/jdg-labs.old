@@ -33,7 +33,7 @@ public class TaskEndpoint
    @Consumes("application/json")
    public Response create(Task task)
    {
-      taskService.create(task);
+      taskService.insert(task);
       return Response.created(UriBuilder.fromResource(TaskEndpoint.class).path(String.valueOf(task.getId())).build()).build();
    }
 
@@ -43,15 +43,6 @@ public class TaskEndpoint
    {
       return taskService.findAll(); 
    }
-   
-//   @GET
-//   @Produces("application/json")
-//   @Path("/filter/{value}")
-//   public Collection<Task> filter(@PathParam("value") String value)
-//   {
-//      
-//	  return taskService.filter(value);
-//   }
 
    @PUT
    @Path("/{id:[0-9][0-9]*}")
