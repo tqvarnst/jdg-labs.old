@@ -1,6 +1,6 @@
 package org.jboss.infinispan.demo.rest;
 
-import java.util.List;
+import java.util.Collection;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -11,7 +11,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
@@ -39,19 +38,9 @@ public class TaskEndpoint
 
    @GET
    @Produces("application/json")
-   public List<Task> listAll()
+   public Collection<Task> listAll()
    {
       return taskService.findAll(); 
-   }
-   
-   @GET
-   @Produces("application/json")
-   @Path("/filter/{value}")
-   public List<Task> filter(@PathParam("value") String value)
-   {
-      
-	  final List<Task> results = taskService.filter(value);
-      return results;
    }
 
    @PUT

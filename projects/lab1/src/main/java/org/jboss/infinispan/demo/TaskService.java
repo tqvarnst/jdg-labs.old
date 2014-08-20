@@ -1,6 +1,8 @@
 package org.jboss.infinispan.demo;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
@@ -19,28 +21,19 @@ public class TaskService {
 	@PersistenceContext
     EntityManager em;
 
+	Logger log = Logger.getLogger(this.getClass().getName());
+	
 	/**
 	 * This methods should return all cache entries, currently contains mockup code. 
 	 * @return
 	 */
-	public List<Task> findAll() {
+	public Collection<Task> findAll() {
+		log.info("### Querying the database for tasks!!!!");
 		final CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         final CriteriaQuery<Task> criteriaQuery = criteriaBuilder.createQuery(Task.class);
 		
         Root<Task> root = criteriaQuery.from(Task.class);
         criteriaQuery.select(root);
-        return em.createQuery(criteriaQuery).getResultList();
-	}
-	
-	public List<Task> filter(String input) {
-		final CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-        final CriteriaQuery<Task> criteriaQuery = criteriaBuilder.createQuery(Task.class);
-		
-        Root<Task> root = criteriaQuery.from(Task.class);
-        criteriaQuery.where(
-        		criteriaBuilder.like(
-        				criteriaBuilder.upper(root.get("title").as(String.class)), 
-        				"%" + input.toUpperCase() + "%"));
         return em.createQuery(criteriaQuery).getResultList();
 	}
 
