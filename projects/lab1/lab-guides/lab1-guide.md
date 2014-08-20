@@ -2,11 +2,12 @@
 This explains the steps for lab 1, either follow them step-by-step or if you eel adventurous read the overview and try to accomplish goals without the help of the step-by-step
 
 ## Overview of Lab 1
-In lab 1 we will create the backend storage for a mockup application written in CDI, REST and AngularJS. The mockup application is available [here](https://github.com/tqvarnst/jdg-modules-demo/tree/1.0-mockup). The main steps in lab1 is to:
+In lab 1 we will introduce JDG as a cache for a mockup application written in CDI, REST and AngularJS. The main steps in lab1 is to:
 
-1. Install and build the mock project
-2. Add dependencies to the maven project and to the WAR file
-3. Inject a local Cache into TaskService class and implement the logic to findAll, create, update. 
+
+1. Install the mockup application and verify that is working
+1. Add dependencies to the maven project and to the WAR file for JDG
+1. Inject a local Cache into TaskService class and implement the logic to cache findAll.
 
 
 ## Step-by-Step
@@ -15,42 +16,19 @@ The step-by-step guide is dived into 3 different sections matching the main step
 The First step over is to verify that the application build and deploy before we do anything else.
 
 ### Install and build the mock project
-
-1. Download a ZIP of the project directly from the site or by using the following command
-
-        $  curl https://codeload.github.com/tqvarnst/jdg-modules-demo/zip/master -o lab1.zip
-
-2. Unzip into a suitable directory and change dir to it
-        
-        $ unzip lab1.zip  -d ~/tmp
-        $ cd ~/tmp
-       
-3. Rename the top directory and change dir to it
-        
-        $ mv jdg-modules-demo-1.0-mockup lab1
-        $ cd lab1
-     
-4. Copy JBoss EAP 6.2 and JDG 6.3 EAP Modules into installs directory (In the commmand we assumet that the files are in the Download folder in your home directory, you may have to change that to the location where you have download this files)
-
-		$ cp ~/Download/jboss-eap-6.2.0.zip installs/
-		$ cp ~/Download/jboss-datagrid-6.3.0-eap-modules-library.zip installs/
 		
-5. Run the init script
-
-        $ ./init.sh
-        
-6. Start the JBoss EAP
-
-		$ target/jboss-eap-6.2/bin/standalone.sh
-		
-7. In another terminal change directory to the project, build and deploy it
+1. In terminal (on the dev host) change directory to the project, build and deploy it
 
         $ cd project/todo
         $ mvn package jboss-as:deploy
-8. Verify in a browser that application deployed nice successfully by clicking [this](http://localhost:8080/todo) link. Also notice that if you try to add a task, it doesn't work and if you check a task as completed and reload the browser it shows up as not completed again. This is becuase the application doesn't store the content. 
+        
+1. Verify in a browser that application deployed nice successfully by opening [http://localhost:8080/todo](http://localhost:8080/todo) in a browser. 
 
+1. Click around and verify that you can add tasks and complete tasks etc.
 
-9. We are now done with the installation and deployment of the Mock project. If you didn't understand each step, don't worry from this point it will only get easier and much more about coding Java. :-) 
+	The Mock application is simple todo application that uses a database to store tasks. It uses angular.js on the client and the server side consists of REST services to list, create and update these tasks.
+	
+1. Go thourgh the code a bit to understand the application 
 
 
 ### Add dependencies to the maven project

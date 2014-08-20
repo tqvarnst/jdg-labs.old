@@ -1,12 +1,14 @@
 package org.jboss.infinispan.demo;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.jboss.infinispan.demo.model.Task;
 
@@ -14,37 +16,41 @@ import org.jboss.infinispan.demo.model.Task;
 @ApplicationScoped
 public class TaskService {
 
+	@PersistenceContext
+    EntityManager em;
 
 	/**
 	 * This methods should return all cache entries, currently contains mockup code. 
 	 * @return
 	 */
 	public List<Task> findAll() {
-		//TODO: Replace this mockup code with code that returns a list from JDG
-		ArrayList<Task> list = new ArrayList<Task>();
-		Calendar calendar = new GregorianCalendar();
-		Task t1 = new Task();
-		t1.setId(new Long(1));
-		t1.setTitle("Send email to Anna about latest requirements");
-		calendar.set(2014, 5, 30,14,43,07);
-		t1.setCreatedOn(calendar.getTime());
-		list.add(t1);
-		Task t2 = new Task();
-		t2.setId(new Long(2));
-		t2.setTitle("Verify that the latest configuration contains the latest patches");
-		calendar.set(2014, 6, 3,8,55,14);
-		t2.setCreatedOn(calendar.getTime());
-		list.add(t2);
-		return list;
+		final CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        final CriteriaQuery<Task> criteriaQuery = criteriaBuilder.createQuery(Task.class);
+		
+        Root<Task> root = criteriaQuery.from(Task.class);
+        criteriaQuery.select(root);
+        return em.createQuery(criteriaQuery).getResultList();
+	}
+	
+	public List<Task> filter(String input) {
+		final CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        final CriteriaQuery<Task> criteriaQuery = criteriaBuilder.createQuery(Task.class);
+		
+        Root<Task> root = criteriaQuery.from(Task.class);
+        criteriaQuery.where(
+        		criteriaBuilder.like(
+        				criteriaBuilder.upper(root.get("title").as(String.class)), 
+        				"%" + input.toUpperCase() + "%"));
+        return em.createQuery(criteriaQuery).getResultList();
 	}
 
 	public void create(Task task) {
-		//TODO
+		em.persist(task);
 	}
 
 
 	public void update(Task task) {
-		//TODO
+		em.merge(task);
 	}
 
 }

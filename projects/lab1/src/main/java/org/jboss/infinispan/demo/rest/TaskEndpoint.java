@@ -39,10 +39,18 @@ public class TaskEndpoint
 
    @GET
    @Produces("application/json")
-   public List<Task> listAll(@QueryParam("start") Integer startPosition, @QueryParam("max") Integer maxResult)
+   public List<Task> listAll()
+   {
+      return taskService.findAll(); 
+   }
+   
+   @GET
+   @Produces("application/json")
+   @Path("/filter/{value}")
+   public List<Task> filter(@PathParam("value") String value)
    {
       
-      final List<Task> results = taskService.findAll();
+	  final List<Task> results = taskService.filter(value);
       return results;
    }
 
