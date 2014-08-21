@@ -4,7 +4,6 @@ JBOSS_HOME=./target/jboss-eap-6.3
 JDG_HOME=./target/jboss-datagrid-6.3.0-server
 SERVER_DIR=$JBOSS_HOME/standalone/deployments/
 SERVER_CONF=$JBOSS_HOME/standalone/configuration/
-LIB_DIR=./support/lib
 SRC_DIR=./installs
 EAP=jboss-eap-6.3.0.zip
 JDG_SERVER=jboss-datagrid-6.3.0-server.zip
