@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.redhat.jdg.workshop</groupId>
 	<artifactId>lab</artifactId>
-	<version>2.0.0</version>
+	<version>2.1.0</version>
 	<packaging>war</packaging>
 	<properties>
 		<maven.compiler.source>1.7</maven.compiler.source>
@@ -78,6 +78,11 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.infinispan</groupId>
+			<artifactId>infinispan-query</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>javax.cache</groupId>
 			<artifactId>cache-api</artifactId>
 			<version>1.0.0-PFD</version>
@@ -94,7 +99,7 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 					<archive>
 						<manifestEntries>
-							<Dependencies>org.infinispan.cdi:jdg-6.3 meta-inf,org.infinispan:jdg-6.3 services</Dependencies>
+							<Dependencies>org.infinispan.cdi:jdg-6.3 meta-inf,org.infinispan:jdg-6.3 services,org.infinispan.query:jdg-6.3 services</Dependencies>
 						</manifestEntries>
 					</archive>
 				</configuration>

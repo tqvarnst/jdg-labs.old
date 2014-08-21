@@ -1,5 +1,6 @@
 package org.jboss.infinispan.demo;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +17,12 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import org.apache.lucene.search.Query;
+import org.hibernate.search.query.dsl.QueryBuilder;
 import org.infinispan.Cache;
+import org.infinispan.query.CacheQuery;
+import org.infinispan.query.Search;
+import org.infinispan.query.SearchManager;
 import org.jboss.infinispan.demo.model.Task;
 
 @Named
@@ -41,16 +47,26 @@ public class TaskService {
 	}
 	
 	public List<Task> filter(String input) {
-		log.info("### Querying the database for filtered tasks!!!!");
-		final CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-        final CriteriaQuery<Task> criteriaQuery = criteriaBuilder.createQuery(Task.class);
+		SearchManager sm = Search.getSearchManager(cache);
+		QueryBuilder qb = sm.buildQueryBuilderForClass(Task.class).get();
+		Query q = qb.keyword().onField("title").matching(input).createQuery();
+		CacheQuery cq = sm.getQuery(q, Task.class);
+		List<Task> tasks = new ArrayList<Task>();
+		for (Object object : cq) {
+			tasks.add((Task) object);
+		}
+		return tasks;
 		
-        Root<Task> root = criteriaQuery.from(Task.class);
-        criteriaQuery.where(
-        		criteriaBuilder.like(
-        				criteriaBuilder.upper(root.get("title").as(String.class)), 
-        				"%" + input.toUpperCase() + "%"));
-        return em.createQuery(criteriaQuery).getResultList();
+//		log.info("### Querying the database for filtered tasks!!!!");
+//		final CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+//        final CriteriaQuery<Task> criteriaQuery = criteriaBuilder.createQuery(Task.class);
+//		
+//        Root<Task> root = criteriaQuery.from(Task.class);
+//        criteriaQuery.where(
+//        		criteriaBuilder.like(
+//        				criteriaBuilder.upper(root.get("title").as(String.class)), 
+//        				"%" + input.toUpperCase() + "%"));
+//        return em.createQuery(criteriaQuery).getResultList();
 	}
 
 	public void insert(Task task) {

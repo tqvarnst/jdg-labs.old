@@ -13,7 +13,12 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
+
 @Entity
+@Indexed
 public class Task implements Serializable {
 
 	private static final long serialVersionUID = 2315323429163437300L;
@@ -27,6 +32,7 @@ public class Task implements Serializable {
 	@Column(name = "version")
 	private int version;
 
+	@Field(store = Store.YES)
 	@Column(length = 100)
 	private String title;
 
