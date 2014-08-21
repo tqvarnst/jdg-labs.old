@@ -3,9 +3,7 @@ This guide explains how to setup the project
 
 ### Install and build the mock project
 
-1. Clone the project to a directory of choice
-
-        $ git clone <url>
+1. After unpackaging the zip file that contains the labs, do the following
 
 1. Copy the installation files to the `installs` directory, your installs directory should contain the following files: 
 	* jboss-datagrid-6.3.0-eap-modules-hotrod-java-client.zip
