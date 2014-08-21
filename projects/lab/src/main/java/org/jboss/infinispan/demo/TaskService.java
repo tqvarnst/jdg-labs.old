@@ -54,8 +54,9 @@ public class TaskService {
 	}
 
 	public void insert(Task task) {
-		if(task.getCreatedOn()==null)
+		if(task.getCreatedOn()==null) {
 			task.setCreatedOn(new Date());
+		}
 		em.persist(task);
 		cache.put(task.getId(),task);
 	}

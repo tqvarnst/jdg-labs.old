@@ -48,7 +48,6 @@ public class TaskEndpoint
    @Path("/filter/{value}")
    public Collection<Task> filter(@PathParam("value") String value)
    {
-      
 	  return taskService.filter(value);
    }
 
