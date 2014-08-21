@@ -39,13 +39,15 @@ public class Config {
 			 
 			Properties properties = new Properties();
 			properties.put(org.hibernate.search.Environment.MODEL_MAPPING, mapping);
+			properties.put("default.directory_provider", "ram");
+		
 			
 			Configuration loc = new ConfigurationBuilder().jmxStatistics()
 					.enable() // Enable JMX statistics
 					.eviction().strategy(EvictionStrategy.NONE) // Do not evic objects
 					.indexing()
 						.enable()
-						.indexLocalOnly(true)
+						.indexLocalOnly(false)
 						.withProperties(properties)
 					.build();
 			manager = new DefaultCacheManager(glob, loc, true);
