@@ -38,7 +38,7 @@ public class TaskService {
         return em.createQuery(criteriaQuery).getResultList();
 	}
 
-	public void create(Task task) {
+	public void insert(Task task) {
 		if(task.getCreatedOn()==null) {
 			task.setCreatedOn(new Date());
 		}

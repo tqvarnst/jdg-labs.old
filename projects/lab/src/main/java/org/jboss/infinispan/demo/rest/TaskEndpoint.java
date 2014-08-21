@@ -32,7 +32,7 @@ public class TaskEndpoint
    @Consumes("application/json")
    public Response create(Task task)
    {
-      taskService.create(task);
+      taskService.insert(task);
       return Response.created(UriBuilder.fromResource(TaskEndpoint.class).path(String.valueOf(task.getId())).build()).build();
    }
 
