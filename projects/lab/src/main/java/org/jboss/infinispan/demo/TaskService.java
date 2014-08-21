@@ -1,6 +1,7 @@
 package org.jboss.infinispan.demo;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -38,6 +39,9 @@ public class TaskService {
 	}
 
 	public void create(Task task) {
+		if(task.getCreatedOn()==null) {
+			task.setCreatedOn(new Date());
+		}
 		em.persist(task);
 	}
 
