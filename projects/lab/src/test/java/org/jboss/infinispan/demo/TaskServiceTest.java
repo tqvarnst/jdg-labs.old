@@ -27,7 +27,8 @@ public class TaskServiceTest {
 
 	@Inject
 	private TaskService taskservice;
-
+	
+	
 	@Deployment
 	public static WebArchive createDeployment() {
 		// File[] asFile =
@@ -46,6 +47,7 @@ public class TaskServiceTest {
 				.addClass(Config.class)
 				.addClass(Task.class)
 				.addClass(TaskService.class)
+				.addAsResource("import.sql")
 				.addAsResource("META-INF/persistence.xml",
 						"META-INF/persistence.xml")
 				.addAsWebInfResource(new File("src/main/webapp/WEB-INF/jboss-deployment-structure.xml"))
@@ -62,7 +64,7 @@ public class TaskServiceTest {
 	@InSequence(2)
 	public void testRetrivingTasks() {
 		Collection<Task> tasks = taskservice.findAll();
-		Assert.assertEquals(tasks.size(), 5);
+		Assert.assertEquals(5, tasks.size());
 	}
 
 	@Test

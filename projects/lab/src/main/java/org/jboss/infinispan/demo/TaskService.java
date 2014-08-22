@@ -2,14 +2,12 @@ package org.jboss.infinispan.demo;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.cache.annotation.CacheResult;
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -19,8 +17,8 @@ import javax.persistence.criteria.Root;
 import org.infinispan.Cache;
 import org.jboss.infinispan.demo.model.Task;
 
-@Named
-@ApplicationScoped
+
+@Stateless
 public class TaskService {
 
 	@PersistenceContext(name="default")
