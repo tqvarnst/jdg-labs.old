@@ -23,7 +23,7 @@ import org.jboss.infinispan.demo.model.Task;
 @ApplicationScoped
 public class TaskService {
 
-	@PersistenceContext
+	@PersistenceContext(name="default")
     EntityManager em;
 	
 	@Inject
