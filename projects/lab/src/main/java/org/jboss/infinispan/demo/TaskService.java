@@ -7,10 +7,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
-import javax.cache.annotation.CacheResult;
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -25,8 +23,7 @@ import org.infinispan.query.Search;
 import org.infinispan.query.SearchManager;
 import org.jboss.infinispan.demo.model.Task;
 
-@Named
-@ApplicationScoped
+@Stateless
 public class TaskService {
 
 	@PersistenceContext
@@ -41,12 +38,11 @@ public class TaskService {
 	 * This methods should return all cache entries, currently contains mockup code. 
 	 * @return
 	 */
-	@CacheResult
 	public Collection<Task> findAll() {
 		return cache.values();
 	}
 	
-	public List<Task> filter(String input) {
+	public Collection<Task> filter(String input) {
 		SearchManager sm = Search.getSearchManager(cache);
 		QueryBuilder qb = sm.buildQueryBuilderForClass(Task.class).get();
 		Query q = qb.keyword().onField("title").matching(input).createQuery();
