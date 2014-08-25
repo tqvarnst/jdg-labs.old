@@ -1,5 +1,6 @@
 package org.jboss.infinispan.demo;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Date;
 import java.util.logging.Logger;
@@ -31,13 +32,13 @@ public class TaskServiceTest {
 
 		return ShrinkWrap
 				.create(WebArchive.class, "todo-test.war")
-//				.addClass(Config.class)
+				.addClass(Config.class)
 				.addClass(Task.class)
 				.addClass(TaskService.class)
 				.addAsResource("import.sql")
 				.addAsResource("META-INF/persistence.xml",
 						"META-INF/persistence.xml")
-//				.addAsWebInfResource(new File("src/main/webapp/WEB-INF/jboss-deployment-structure.xml"))
+				.addAsWebInfResource(new File("src/main/webapp/WEB-INF/jboss-deployment-structure.xml"))
 				.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 	}
 
@@ -69,7 +70,7 @@ public class TaskServiceTest {
 	@InSequence(4)
 	public void testUpdateTask() {
 		Task task = new Task();
-		task.setTitle("This is the second test task");
+		task.setTitle("THIS IS A TEST TASK QWERTY!123456");
 		task.setCreatedOn(new Date());
 		taskservice.insert(task);
 
@@ -80,8 +81,14 @@ public class TaskServiceTest {
 
 		Collection<Task> tasks = taskservice.findAll();
 		Assert.assertEquals(7,tasks.size());
-		Assert.assertNotNull(task.getCompletedOn());
-		Assert.assertEquals(true,task.isDone());
+		
+		for (Task listTask : tasks) {
+			if("THIS IS A TEST TASK QWERTY!123456".equals(listTask.getTitle())) {
+				Assert.assertNotNull(listTask.getCompletedOn());
+				Assert.assertEquals(true,listTask.isDone());
+			}
+			log.info("#### Found Task with id " + listTask.getId() + ", and title " + listTask.getTitle() + ", and version " + listTask.getVersion());
+		}
 	}
 
 }
