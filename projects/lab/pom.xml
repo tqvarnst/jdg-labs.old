@@ -121,12 +121,6 @@
 				<version>2.4</version>
 				<configuration>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
-					<archive>
-						<manifestEntries>
-							<Dependencies>org.infinispan.cdi:jdg-6.3
-								meta-inf,org.infinispan:jdg-6.3 services</Dependencies>
-						</manifestEntries>
-					</archive>
 				</configuration>
 			</plugin>
 			<plugin>
