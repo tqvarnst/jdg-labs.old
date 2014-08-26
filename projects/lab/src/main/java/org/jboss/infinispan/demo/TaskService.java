@@ -51,8 +51,7 @@ public class TaskService {
 		for (Object object : cq) {
 			tasks.add((Task) object);
 		}
-		return tasks;
-		
+		return tasks;	
 //		log.info("### Querying the database for filtered tasks!!!!");
 //		final CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
 //        final CriteriaQuery<Task> criteriaQuery = criteriaBuilder.createQuery(Task.class);

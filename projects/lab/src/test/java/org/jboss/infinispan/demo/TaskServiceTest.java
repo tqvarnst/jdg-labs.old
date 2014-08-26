@@ -90,5 +90,16 @@ public class TaskServiceTest {
 			log.info("#### Found Task with id " + listTask.getId() + ", and title " + listTask.getTitle() + ", and version " + listTask.getVersion());
 		}
 	}
+	
+	@Test
+	@InSequence(5)
+	public void testFilterTask() {
+		Collection<Task> tasks = taskservice.filter("test");
+		Assert.assertEquals(2, tasks.size());
+		tasks = taskservice.filter("SELL");
+		Assert.assertEquals(2, tasks.size());
+		tasks = taskservice.filter("FeedBack");
+		Assert.assertEquals(2, tasks.size());
+	}
 
 }
