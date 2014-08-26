@@ -35,7 +35,7 @@ public class TaskService {
 		return cache.values();
 	}
 	
-	public List<Task> filter(String input) {
+	public Collection<Task> filter(String input) {
 		log.info("### Querying the database for filtered tasks!!!!");
 		final CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         final CriteriaQuery<Task> criteriaQuery = criteriaBuilder.createQuery(Task.class);
