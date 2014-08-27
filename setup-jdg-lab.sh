@@ -96,7 +96,7 @@ do
 	pushd projects/lab > /dev/null
 	git archive -o "${LAB_ZIP_DIR}/${lab}.zip" --prefix="${lab}/" HEAD
 	unzip -qq "${LAB_ZIP_DIR}/${lab}.zip" -d "${WORKDIR}/${INSTALL_DIR}/projects" >/dev/null
-	wget -O "${WORKDIR}/${INSTALL_DIR}/projects/${lab}/${lab}-guide.pdf" https://gitprint.com/tqvarnst/jdg-labs/blob/${lab}-start/projects/lab/lab-guides/${lab}-guide.md?download
+	wget -O "${WORKDIR}/${INSTALL_DIR}/projects/${lab}/${lab}-guide.pdf" https://gitprint.com/tqvarnst/jdg-labs/blob/master/projects/lab-guides/${lab}-guide.md?download
 	popd >/dev/null
 	#echo "Currently in git branch $(git rev-parse --abbrev-ref HEAD)"
 done
