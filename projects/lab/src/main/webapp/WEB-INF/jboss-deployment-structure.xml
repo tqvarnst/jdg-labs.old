@@ -1,8 +1,15 @@
 <jboss-deployment-structure>
     <deployment>
+        <exclusions>
+            <module name="org.infinispan" />
+            <module name="org.jgroups" />
+        </exclusions>
         <dependencies>
-			<module name="org.infinispan.commons" slot="jdg-6.3" services="export"/>
-            <module name="org.infinispan.client.hotrod" slot="jdg-6.3" services="export"/>
+            <module name="org.infinispan.commons" slot="jdg-6.3" />
+            <module name="org.infinispan.client.hotrod" slot="jdg-6.3" />
+            <module name="org.infinispan.query.dsl" slot="jdg-6.3" />
+            <module name="org.infinispan.protostream" slot="jdg-6.3" />
+            <module name="org.jboss.remoting3" slot="main" />
         </dependencies>
     </deployment>
 </jboss-deployment-structure>
