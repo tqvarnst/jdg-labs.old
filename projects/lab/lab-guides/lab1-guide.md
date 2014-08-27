@@ -112,38 +112,221 @@ to the class
 		import org.infinispan.Cache;
 		import org.jboss.infinispan.demo.model.Task;
 		
-2. Change the implementation of the findAll method to look like this:
+1. Change the implementation of the findAll method to look like this:
 
-		public List<Task> findAll() {
-			return new ArrayList<Task>(cache.values());
+		public Collection<Task> findAll() {
+			return cache.values();
 		}
 		
-3. Change the create method to look like this:
+1. Change the create method to look like this:
 
-		public void create(Task task) {
-			// TODO: Replace the call to cache.size() to improve performance
-			Long id = new Long(cache.size() + 1);
-			task.setId(id);
-			task.setCreatedOn(new Date());
-			cache.put(id, task);
+		public void insert(Task task) {
+			if(task.getCreatedOn()==null) {
+				task.setCreatedOn(new Date());
+			}
+			em.persist(task);
+			cache.put(task.getId(),task);
 		}
 
-4.	Add the implementation of the update method as shown below:
+1.	Add the implementation of the update method as shown below:
 
 		public void update(Task task) {
-			cache.replace(task.getId(), task);
+			em.merge(task);
+			cache.replace(task.getId(),task);
 		}
 
-5. We also need to stop the cache manager when we are done with it
+1. We also need fill the cache with the existing values in the database using by adding the following method:
 		
-		@PreDestroy
-		public void destory() {
-			if (cache != null && cache.getCacheManager()!=null) {
-				cache.getCacheManager().stop();
+		@PostConstruct
+		public void startup() {
+			
+			log.info("### Querying the database for tasks!!!!");
+			final CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+			final CriteriaQuery<Task> criteriaQuery = criteriaBuilder.createQuery(Task.class);
+		
+			Root<Task> root = criteriaQuery.from(Task.class);
+			criteriaQuery.select(root);
+			Collection<Task> resultList = em.createQuery(criteriaQuery).getResultList();
+			
+			for (Task task : resultList) {
+				this.insert(task);
+			}
+			
+		}
+
+1. Next update the TaskServiceTest class to make use of the jboss-deployment-structure.xml by uncomment the following line:
+
+		.addAsWebInfResource(new File("src/main/webapp/WEB-INF/jboss-deployment-structure.xml"))
+
+1. Run the JUnit test to see that everything works as expected
+
+1. Your TaskService.java implementation should look something like this:
+
+		package org.jboss.infinispan.demo;
+		
+		import java.util.Collection;
+		import java.util.Date;
+		import java.util.logging.Logger;
+		
+		import javax.annotation.PostConstruct;
+		import javax.ejb.Stateless;
+		import javax.inject.Inject;
+		import javax.persistence.EntityManager;
+		import javax.persistence.PersistenceContext;
+		import javax.persistence.criteria.CriteriaBuilder;
+		import javax.persistence.criteria.CriteriaQuery;
+		import javax.persistence.criteria.Root;
+		
+		import org.infinispan.Cache;
+		import org.jboss.infinispan.demo.model.Task;
+		
+		@Stateless
+		public class TaskService {
+		
+			@PersistenceContext
+		    EntityManager em;
+			
+			@Inject
+			Cache<Long,Task> cache;
+			
+			Logger log = Logger.getLogger(this.getClass().getName());
+		
+			/**
+			 * This methods should return all cache entries, currently contains mockup code. 
+			 * @return
+			 */
+			public Collection<Task> findAll() {
+				return cache.values();
+			}
+			
+			public void insert(Task task) {
+				if(task.getCreatedOn()==null) {
+					task.setCreatedOn(new Date());
+				}
+				em.persist(task);
+				cache.put(task.getId(),task);
+			}
+		
+			
+			public void update(Task task) {
+				em.merge(task);
+				cache.replace(task.getId(),task);
+			}
+			
+			@PostConstruct
+			public void startup() {
+				
+				log.info("### Querying the database for tasks!!!!");
+				final CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+				final CriteriaQuery<Task> criteriaQuery = criteriaBuilder.createQuery(Task.class);
+			
+				Root<Task> root = criteriaQuery.from(Task.class);
+				criteriaQuery.select(root);
+				Collection<Task> resultList = em.createQuery(criteriaQuery).getResultList();
+				
+				for (Task task : resultList) {
+					this.insert(task);
+				}
+				
+			}
+			
+		}
+
+1. Hold on with deploy to the application server. There are one issue with the current setup that we will solve in the next
+
+###Configure the cache programatically
+What just happend is that we have implemented a local cache solution where we can offload the database based on the default configuraiton. We haven't yet configured any setting with the cache. There are allot of different possibilities to tweak the JDG library mode settings, but at the moment we will only do some basic configuration settings. Settings can be done in XML or in code. In this example we will use the code API, but later we will use the XML to configure JDG in standalone mode.
+
+Below is a code snipped that shows how to create configuration objects for the cache.
+
+		GlobalConfiguration glob = new GlobalConfigurationBuilder()
+				.globalJmxStatistics().allowDuplicateDomains(true).enable() // This
+				// method enables the jmx statistics of the global
+				// configuration and allows for duplicate JMX domains
+				.build();
+		Configuration loc = new ConfigurationBuilder().jmxStatistics()
+				.enable() // Enable JMX statistics
+				.eviction().strategy(EvictionStrategy.NONE) // Do not evic objects
+				.build();
+		DefaultCacheManager manager = new DefaultCacheManager(glob, loc, true);
+		
+There are two main configuration object: ```GlobalConfiguration``` for the Global configuration if we use for example multiple clustred configurations and ```Configuration``` to hold the local configuration. In this example we allow muliple domains since otherwise we get a nasty exception saying that the cache allready exists. In the local configuration we enable JMX statistics (need for JON for example) and we set the eviction.strategy to NONE, meaning that no objects are evicted. 
+
+We can then create a cache manager object using these configuration and pass it true to also start it.
+
+Since we are using CDI in our example we can actually override the cache manager that is used when someone injects a cache with ```@Inject Cache<?,?> cache;``` like we do in TaskService class. This can be done using something called Producer in CDI. So all we have to do is crate a method that looks like this:
+
+		@Produces
+		@ApplicationScoped
+		@Default
+		public EmbeddedCacheManager defaultEmbeddedCacheConfiguration() { ... }
+		
+Then we put this class somewhere in our classpath (or even better in our source) and add the configuration code from above in it. 
+
+1. Add a Config class in package org.jboss.infinispan.demo that looks loke this:
+
+		package org.jboss.infinispan.demo;
+		
+		import javax.annotation.PreDestroy;
+		import javax.enterprise.context.ApplicationScoped;
+		import javax.enterprise.inject.Default;
+		import javax.enterprise.inject.Produces;
+		
+		import org.infinispan.configuration.cache.Configuration;
+		import org.infinispan.configuration.cache.ConfigurationBuilder;
+		import org.infinispan.configuration.global.GlobalConfiguration;
+		import org.infinispan.configuration.global.GlobalConfigurationBuilder;
+		import org.infinispan.eviction.EvictionStrategy;
+		import org.infinispan.manager.DefaultCacheManager;
+		import org.infinispan.manager.EmbeddedCacheManager;
+		
+		public class Config {
+		
+			private EmbeddedCacheManager manager;
+		
+			@Produces
+			@ApplicationScoped
+			@Default
+			public EmbeddedCacheManager defaultEmbeddedCacheConfiguration() {
+				if (manager == null) {
+					GlobalConfiguration glob = new GlobalConfigurationBuilder()
+							.globalJmxStatistics().allowDuplicateDomains(true).enable() // This
+							// method enables the jmx statistics of the global
+							// configuration and allows for duplicate JMX domains
+							.build();
+					Configuration loc = new ConfigurationBuilder().jmxStatistics()
+							.enable() // Enable JMX statistics
+							.eviction().strategy(EvictionStrategy.NONE) // Do not evic objects
+							.build();
+					manager = new DefaultCacheManager(glob, loc, true);
+				}
+				return manager;
+			}
+		
+			@PreDestroy
+			public void cleanUp() {
+				manager.stop();
+				manager = null;
 			}
 		}
+		
+1. Soon we are ready to deploy the application, but first we should add the Config class to Arquillian by uncomment the following line in TaskServiceTest.java
 
-	CacheManager has a definied life cycle that we need to honour. When we inject a instance of the Cache the producer (which is provided by infinispan-cdi package) will create an instance of CacheManager and start it. We will therefor also make sure that we stop it when we are ready with it.
+		.addClass(Config.class)
+		
+1. Run the JUnit test by right clicking TaskServiceTest.java and select Run As ... -> JUnit Test
+
+1. If everything is green we are ready to deploy the application with the following command in a terminal
+
+		$ mvn package jboss-as:deploy
+		
+1. Test the application by opening a browser window to [http://localhost:8080/todo](http://localhost:8080/todo)
+
+1. Congratulations you are done with lab1.
+
+
+
+
 
 	
 
