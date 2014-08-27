@@ -6,16 +6,19 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.Stateless;
+import javax.ejb.Singleton;
 
 import org.jboss.infinispan.demo.model.Task;
 
 /**
  * This is a mockup class where tasks are stored as a local variable. 
  * @author tqvarnst
+ * 
+ * TODO: implement a JDG hotrod client to store the task in a data grid
+ * TODO: Change from @Singleton to @Stateless since singelton will not scale
  *
  */
-@Stateless
+@Singleton 
 public class TaskService {
 
 	
@@ -36,6 +39,9 @@ public class TaskService {
 	public void insert(Task task) {
 		if(task.getId()==null) {
 			task.setId(tasks.size()+1L); //Ugly way to create unique ID's
+		}
+		if(task.getCreatedOn()==null) {
+			task.setCreatedOn(new Date());
 		}
 		tasks.add(task);
 		
