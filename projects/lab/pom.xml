@@ -9,9 +9,9 @@
 	<packaging>war</packaging>
 	<properties>
 		<version.junit>4.11</version.junit>
-		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.source>1.6</maven.compiler.source>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.target>1.6</maven.compiler.target>
 		<version.arquillian_core>1.1.5.Final</version.arquillian_core>
 	</properties>
 	<dependencyManagement>
@@ -69,6 +69,16 @@
 		<dependency>
 			<groupId>org.jboss.spec.javax.ejb</groupId>
 			<artifactId>jboss-ejb-api_3.1_spec</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.infinispan</groupId>
+			<artifactId>infinispan-commons</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.infinispan</groupId>
+			<artifactId>infinispan-client-hotrod</artifactId>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

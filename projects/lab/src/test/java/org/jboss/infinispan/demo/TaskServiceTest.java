@@ -13,7 +13,9 @@ import org.jboss.arquillian.junit.InSequence;
 import org.jboss.infinispan.demo.model.Task;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,17 +31,20 @@ public class TaskServiceTest {
 	
 	@Deployment
 	public static WebArchive createDeployment() {
+		
 
-		return ShrinkWrap
-				.create(WebArchive.class, "todo-test.war")
-				.addClass(Config.class)
-				.addClass(Task.class)
-				.addClass(TaskService.class)
-//				.addAsResource("import.sql")
-//				.addAsResource("META-INF/persistence.xml",
-//						"META-INF/persistence.xml")
-				.addAsWebInfResource(new File("src/main/webapp/WEB-INF/jboss-deployment-structure.xml"))
-				.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+		return ShrinkWrap.create(ZipImporter.class, "todo-test.war").importFrom(new File("target/todo.war")).as(WebArchive.class);
+		
+//		return ShrinkWrap
+//				.create(WebArchive.class, "todo-test.war")
+//				.addClass(Config.class)
+//				.addClass(Task.class)
+//				.addClass(TaskService.class)
+////				.addAsResource("import.sql")
+////				.addAsResource("META-INF/persistence.xml",
+////						"META-INF/persistence.xml")
+////				.addAsWebInfResource(new File("src/main/webapp/WEB-INF/jboss-deployment-structure.xml"))
+//				.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 	}
 
 	@Test
