@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
+import org.jboss.infinispan.demo.model.Task;
 
 public class Config {
 
@@ -22,7 +23,7 @@ public class Config {
 	}
 
 	@Produces
-	public RemoteCache<String, Object> getRemoteCache() {
+	public RemoteCache<Long, Task> getRemoteCache() {
 		return cacheManager.getCache("tasks");
 	}
 

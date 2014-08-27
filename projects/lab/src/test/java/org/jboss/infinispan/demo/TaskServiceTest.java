@@ -3,10 +3,12 @@ package org.jboss.infinispan.demo;
 import java.io.File;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
 
+import org.infinispan.client.hotrod.RemoteCache;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
@@ -16,6 +18,7 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
+import org.jboss.shrinkwrap.resolver.api.maven.MavenStrategyStage;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +26,9 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 public class TaskServiceTest {
 	
-	Logger log = Logger.getLogger(this.getClass().getName());
+	
+	static Logger log = Logger.getLogger(TaskServiceTest.class.getName());
+	
 
 	@Inject
 	private TaskService taskservice;
@@ -31,20 +36,15 @@ public class TaskServiceTest {
 	
 	@Deployment
 	public static WebArchive createDeployment() {
+		File[] files = Maven.resolver().loadPomFromFile("pom.xml").importRuntimeDependencies().resolve().withTransitivity().asFile();
 		
-
-		return ShrinkWrap.create(ZipImporter.class, "todo-test.war").importFrom(new File("target/todo.war")).as(WebArchive.class);
-		
-//		return ShrinkWrap
-//				.create(WebArchive.class, "todo-test.war")
-//				.addClass(Config.class)
-//				.addClass(Task.class)
-//				.addClass(TaskService.class)
-////				.addAsResource("import.sql")
-////				.addAsResource("META-INF/persistence.xml",
-////						"META-INF/persistence.xml")
-////				.addAsWebInfResource(new File("src/main/webapp/WEB-INF/jboss-deployment-structure.xml"))
-//				.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+		return ShrinkWrap
+				.create(WebArchive.class, "todo-test.war")
+				.addClass(Config.class)
+				.addClass(Task.class)
+				.addClass(TaskService.class)
+				.addAsLibraries(files)
+				.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 	}
 
 	@Test
@@ -57,42 +57,61 @@ public class TaskServiceTest {
 	@InSequence(2)
 	public void testRetrivingTasks() {
 		Collection<Task> tasks = taskservice.findAll();
-		Assert.assertEquals(3, tasks.size());
+		Assert.assertNotNull(tasks);
 	}
 
 	@Test
 	@InSequence(3)
 	public void testInsertTask() {
+		int currentSize = taskservice.findAll().size();
+		
 		Task task = new Task();
 		task.setTitle("This is a test task");
 		task.setCreatedOn(new Date());
 		taskservice.insert(task);
 		Collection<Task> tasks = taskservice.findAll();
-		Assert.assertEquals(4, tasks.size());
+		Assert.assertEquals(currentSize+1, tasks.size());
+		
+		// Clean up
+		taskservice.delete(task);
 	}
 
 	@Test
 	@InSequence(4)
 	public void testUpdateTask() {
+		int currentSize = taskservice.findAll().size();
+		
+		// Insert a task
 		Task task = new Task();
 		task.setTitle("THIS IS A TEST TASK QWERTY!123456");
 		task.setCreatedOn(new Date());
 		taskservice.insert(task);
 
-		log.info("###### Inserted task with id " + task.getId());
-		task.setDone(true);
-		task.setCompletedOn(new Date());
-		taskservice.update(task);
-
+		//Collect the tasks
 		Collection<Task> tasks = taskservice.findAll();
-		Assert.assertEquals(5,tasks.size());
+		Assert.assertEquals(currentSize+1,tasks.size());
+		for (Task listTask : tasks) {
+			if("THIS IS A TEST TASK QWERTY!123456".equals(listTask.getTitle())) {
+				listTask.setDone(true);
+				listTask.setCompletedOn(new Date());
+				taskservice.update(listTask);
+			}
+		}
 		
+		// Make sure that the update hasen't changed the size
+		tasks = taskservice.findAll();
+		Assert.assertEquals(currentSize+1,tasks.size());
+		
+		//Make sure that the task has been updated
 		for (Task listTask : tasks) {
 			if("THIS IS A TEST TASK QWERTY!123456".equals(listTask.getTitle())) {
 				Assert.assertNotNull(listTask.getCompletedOn());
 				Assert.assertEquals(true,listTask.isDone());
+				
+				// Clean up
+				taskservice.delete(listTask);
+				
 			}
-			log.info("#### Found Task with id " + listTask.getId() + ", and title " + listTask.getTitle() + ", and version " + listTask.getVersion());
 		}
 	}
 }
