@@ -43,15 +43,6 @@ public class TaskEndpoint
    {
       return taskService.findAll(); 
    }
-   
-   @GET
-   @Produces("application/json")
-   @Path("/filter/{value}")
-   public Collection<Task> filter(@PathParam("value") String value)
-   {
-      
-	  return taskService.filter(value);
-   }
 
    @PUT
    @Path("/{id:[0-9][0-9]*}")

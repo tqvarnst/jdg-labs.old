@@ -35,9 +35,9 @@ public class TaskServiceTest {
 				.addClass(Config.class)
 				.addClass(Task.class)
 				.addClass(TaskService.class)
-				.addAsResource("import.sql")
-				.addAsResource("META-INF/persistence.xml",
-						"META-INF/persistence.xml")
+//				.addAsResource("import.sql")
+//				.addAsResource("META-INF/persistence.xml",
+//						"META-INF/persistence.xml")
 				.addAsWebInfResource(new File("src/main/webapp/WEB-INF/jboss-deployment-structure.xml"))
 				.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 	}
@@ -52,7 +52,7 @@ public class TaskServiceTest {
 	@InSequence(2)
 	public void testRetrivingTasks() {
 		Collection<Task> tasks = taskservice.findAll();
-		Assert.assertEquals(5, tasks.size());
+		Assert.assertEquals(3, tasks.size());
 	}
 
 	@Test
@@ -63,7 +63,7 @@ public class TaskServiceTest {
 		task.setCreatedOn(new Date());
 		taskservice.insert(task);
 		Collection<Task> tasks = taskservice.findAll();
-		Assert.assertEquals(6, tasks.size());
+		Assert.assertEquals(4, tasks.size());
 	}
 
 	@Test
@@ -80,7 +80,7 @@ public class TaskServiceTest {
 		taskservice.update(task);
 
 		Collection<Task> tasks = taskservice.findAll();
-		Assert.assertEquals(7,tasks.size());
+		Assert.assertEquals(5,tasks.size());
 		
 		for (Task listTask : tasks) {
 			if("THIS IS A TEST TASK QWERTY!123456".equals(listTask.getTitle())) {
@@ -90,16 +90,4 @@ public class TaskServiceTest {
 			log.info("#### Found Task with id " + listTask.getId() + ", and title " + listTask.getTitle() + ", and version " + listTask.getVersion());
 		}
 	}
-	
-	@Test
-	@InSequence(5)
-	public void testFilterTask() {
-		Collection<Task> tasks = taskservice.filter("test");
-		Assert.assertEquals(2, tasks.size());
-		tasks = taskservice.filter("SELL");
-		Assert.assertEquals(2, tasks.size());
-		tasks = taskservice.filter("FeedBack");
-		Assert.assertEquals(2, tasks.size());
-	}
-
 }
