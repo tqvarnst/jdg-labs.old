@@ -3,22 +3,18 @@ package org.jboss.infinispan.demo;
 import java.io.File;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
 
-import org.infinispan.client.hotrod.RemoteCache;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
 import org.jboss.infinispan.demo.model.Task;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenStrategyStage;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,14 +32,14 @@ public class TaskServiceTest {
 	
 	@Deployment
 	public static WebArchive createDeployment() {
-		File[] files = Maven.resolver().loadPomFromFile("pom.xml").importRuntimeDependencies().resolve().withTransitivity().asFile();
+		File[] jars = Maven.resolver().loadPomFromFile("pom.xml").importRuntimeDependencies().resolve().withTransitivity().asFile();
 		
 		return ShrinkWrap
 				.create(WebArchive.class, "todo-test.war")
 				.addClass(Config.class)
 				.addClass(Task.class)
 				.addClass(TaskService.class)
-				.addAsLibraries(files)
+				.addAsLibraries(jars)
 				.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 	}
 
