@@ -1,5 +1,6 @@
 package org.jboss.infinispan.demo;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Date;
 import java.util.logging.Logger;
@@ -31,13 +32,13 @@ public class TaskServiceTest {
 
 		return ShrinkWrap
 				.create(WebArchive.class, "todo-test.war")
-//				.addClass(Config.class)
+				.addClass(Config.class)
 				.addClass(Task.class)
 				.addClass(TaskService.class)
 				.addAsResource("import.sql")
 				.addAsResource("META-INF/persistence.xml",
 						"META-INF/persistence.xml")
-//				.addAsWebInfResource(new File("src/main/webapp/WEB-INF/jboss-deployment-structure.xml"))
+			    .addAsWebInfResource(new File("src/main/webapp/WEB-INF/jboss-deployment-structure.xml"))
 				.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 	}
 
@@ -51,37 +52,44 @@ public class TaskServiceTest {
 	@InSequence(2)
 	public void testRetrivingTasks() {
 		Collection<Task> tasks = taskservice.findAll();
-		Assert.assertEquals(5, tasks.size());
+		Assert.assertNotNull(tasks);
 	}
 
 	@Test
 	@InSequence(3)
 	public void testInsertTask() {
+		int orgsize = taskservice.findAll().size();
 		Task task = new Task();
 		task.setTitle("This is a test task");
 		task.setCreatedOn(new Date());
+		
 		taskservice.insert(task);
-		Collection<Task> tasks = taskservice.findAll();
-		Assert.assertEquals(6, tasks.size());
+		Assert.assertEquals(orgsize+1, taskservice.findAll().size());
+		
+		taskservice.delete(task);
+		Assert.assertEquals(orgsize, taskservice.findAll().size());
 	}
 
 	@Test
 	@InSequence(4)
 	public void testUpdateTask() {
+		int orgsize = taskservice.findAll().size();
 		Task task = new Task();
 		task.setTitle("This is the second test task");
 		task.setCreatedOn(new Date());
 		taskservice.insert(task);
+		Assert.assertEquals(orgsize+1, taskservice.findAll().size());
 
 		log.info("###### Inserted task with id " + task.getId());
 		task.setDone(true);
 		task.setCompletedOn(new Date());
 		taskservice.update(task);
-
-		Collection<Task> tasks = taskservice.findAll();
-		Assert.assertEquals(7,tasks.size());
+		Assert.assertEquals(orgsize+1, taskservice.findAll().size());
 		Assert.assertNotNull(task.getCompletedOn());
 		Assert.assertEquals(true,task.isDone());
+		
+		taskservice.delete(task);
+		Assert.assertEquals(orgsize, taskservice.findAll().size());
 	}
 
 }
