@@ -38,7 +38,7 @@ public class TaskServiceTest {
 				.addAsResource("import.sql")
 				.addAsResource("META-INF/persistence.xml",
 						"META-INF/persistence.xml")
-				.addAsWebInfResource(new File("src/main/webapp/WEB-INF/jboss-deployment-structure.xml"))
+			    .addAsWebInfResource(new File("src/main/webapp/WEB-INF/jboss-deployment-structure.xml"))
 				.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 	}
 
@@ -52,43 +52,44 @@ public class TaskServiceTest {
 	@InSequence(2)
 	public void testRetrivingTasks() {
 		Collection<Task> tasks = taskservice.findAll();
-		Assert.assertEquals(5, tasks.size());
+		Assert.assertNotNull(tasks);
 	}
 
 	@Test
 	@InSequence(3)
 	public void testInsertTask() {
+		int orgsize = taskservice.findAll().size();
 		Task task = new Task();
 		task.setTitle("This is a test task");
 		task.setCreatedOn(new Date());
+		
 		taskservice.insert(task);
-		Collection<Task> tasks = taskservice.findAll();
-		Assert.assertEquals(6, tasks.size());
+		Assert.assertEquals(orgsize+1, taskservice.findAll().size());
+		
+		taskservice.delete(task);
+		Assert.assertEquals(orgsize, taskservice.findAll().size());
 	}
 
 	@Test
 	@InSequence(4)
 	public void testUpdateTask() {
+		int orgsize = taskservice.findAll().size();
 		Task task = new Task();
-		task.setTitle("THIS IS A TEST TASK QWERTY!123456");
+		task.setTitle("This is the second test task");
 		task.setCreatedOn(new Date());
 		taskservice.insert(task);
+		Assert.assertEquals(orgsize+1, taskservice.findAll().size());
 
 		log.info("###### Inserted task with id " + task.getId());
 		task.setDone(true);
 		task.setCompletedOn(new Date());
 		taskservice.update(task);
-
-		Collection<Task> tasks = taskservice.findAll();
-		Assert.assertEquals(7,tasks.size());
+		Assert.assertEquals(orgsize+1, taskservice.findAll().size());
+		Assert.assertNotNull(task.getCompletedOn());
+		Assert.assertEquals(true,task.isDone());
 		
-		for (Task listTask : tasks) {
-			if("THIS IS A TEST TASK QWERTY!123456".equals(listTask.getTitle())) {
-				Assert.assertNotNull(listTask.getCompletedOn());
-				Assert.assertEquals(true,listTask.isDone());
-			}
-			log.info("#### Found Task with id " + listTask.getId() + ", and title " + listTask.getTitle() + ", and version " + listTask.getVersion());
-		}
+		taskservice.delete(task);
+		Assert.assertEquals(orgsize, taskservice.findAll().size());
 	}
 
 }
