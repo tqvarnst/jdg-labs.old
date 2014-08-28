@@ -76,6 +76,7 @@ public class TaskServiceTest {
 		
 		// Clean up
 		taskservice.delete(task);
+		tasks = taskservice.findAll();
 		Assert.assertEquals(currentSize, tasks.size());
 	}
 
@@ -113,6 +114,7 @@ public class TaskServiceTest {
 				
 				// Clean up
 				taskservice.delete(listTask);
+				tasks = taskservice.findAll();
 				Assert.assertEquals(currentSize, tasks.size());
 				
 			}
