@@ -1,6 +1,5 @@
 package org.jboss.infinispan.demo;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.Date;
 import java.util.logging.Logger;
@@ -21,24 +20,32 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 public class TaskServiceTest {
 	
-	Logger log = Logger.getLogger(this.getClass().getName());
+	
+	static Logger log = Logger.getLogger(TaskServiceTest.class.getName());
+	
 
 	@Inject
 	private TaskService taskservice;
 	
 	
+	/**
+	 * 
+	 * @return
+	 * 
+	 * FIXME: Uncomment Maven resolver and the addAs Library
+	 * 
+	 * Note: Because of issue ISPN4468 (https://issues.jboss.org/browse/ISPN-4468) we cannot use HotRod Clients as a module and there for we need to import these in the deployment
+	 */
 	@Deployment
 	public static WebArchive createDeployment() {
-
+//		File[] jars = Maven.resolver().loadPomFromFile("pom.xml").importRuntimeDependencies().resolve().withTransitivity().asFile();
+		
 		return ShrinkWrap
 				.create(WebArchive.class, "todo-test.war")
 				.addClass(Config.class)
 				.addClass(Task.class)
 				.addClass(TaskService.class)
-//				.addAsResource("import.sql")
-//				.addAsResource("META-INF/persistence.xml",
-//						"META-INF/persistence.xml")
-				.addAsWebInfResource(new File("src/main/webapp/WEB-INF/jboss-deployment-structure.xml"))
+//				.addAsLibraries(jars)
 				.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 	}
 
@@ -52,42 +59,63 @@ public class TaskServiceTest {
 	@InSequence(2)
 	public void testRetrivingTasks() {
 		Collection<Task> tasks = taskservice.findAll();
-		Assert.assertEquals(3, tasks.size());
+		Assert.assertNotNull(tasks);
 	}
 
 	@Test
 	@InSequence(3)
 	public void testInsertTask() {
+		int currentSize = taskservice.findAll().size();
+		
 		Task task = new Task();
 		task.setTitle("This is a test task");
 		task.setCreatedOn(new Date());
 		taskservice.insert(task);
 		Collection<Task> tasks = taskservice.findAll();
-		Assert.assertEquals(4, tasks.size());
+		Assert.assertEquals(currentSize+1, tasks.size());
+		
+		// Clean up
+		taskservice.delete(task);
+		Assert.assertEquals(currentSize, tasks.size());
 	}
 
 	@Test
 	@InSequence(4)
 	public void testUpdateTask() {
+		int currentSize = taskservice.findAll().size();
+		
+		// Insert a task
 		Task task = new Task();
 		task.setTitle("THIS IS A TEST TASK QWERTY!123456");
 		task.setCreatedOn(new Date());
 		taskservice.insert(task);
 
-		log.info("###### Inserted task with id " + task.getId());
-		task.setDone(true);
-		task.setCompletedOn(new Date());
-		taskservice.update(task);
-
+		//Collect the tasks
 		Collection<Task> tasks = taskservice.findAll();
-		Assert.assertEquals(5,tasks.size());
+		Assert.assertEquals(currentSize+1,tasks.size());
+		for (Task listTask : tasks) {
+			if("THIS IS A TEST TASK QWERTY!123456".equals(listTask.getTitle())) {
+				listTask.setDone(true);
+				listTask.setCompletedOn(new Date());
+				taskservice.update(listTask);
+			}
+		}
 		
+		// Make sure that the update hasen't changed the size
+		tasks = taskservice.findAll();
+		Assert.assertEquals(currentSize+1,tasks.size());
+		
+		//Make sure that the task has been updated
 		for (Task listTask : tasks) {
 			if("THIS IS A TEST TASK QWERTY!123456".equals(listTask.getTitle())) {
 				Assert.assertNotNull(listTask.getCompletedOn());
 				Assert.assertEquals(true,listTask.isDone());
+				
+				// Clean up
+				taskservice.delete(listTask);
+				Assert.assertEquals(currentSize, tasks.size());
+				
 			}
-			log.info("#### Found Task with id " + listTask.getId() + ", and title " + listTask.getTitle() + ", and version " + listTask.getVersion());
 		}
 	}
 }
