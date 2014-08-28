@@ -30,6 +30,14 @@ public class TaskServiceTest {
 	private TaskService taskservice;
 	
 	
+	/**
+	 * 
+	 * @return
+	 * 
+	 * DONE: Uncomment Maven resolver and the addAs Library
+	 * 
+	 * Note: Because of issue ISPN4468 (https://issues.jboss.org/browse/ISPN-4468) we cannot use HotRod Clients as a module and there for we need to import these in the deployment
+	 */
 	@Deployment
 	public static WebArchive createDeployment() {
 		File[] jars = Maven.resolver().loadPomFromFile("pom.xml").importRuntimeDependencies().resolve().withTransitivity().asFile();
@@ -66,10 +74,12 @@ public class TaskServiceTest {
 		task.setCreatedOn(new Date());
 		taskservice.insert(task);
 		Collection<Task> tasks = taskservice.findAll();
-		Assert.assertEquals(currentSize+1, tasks.size());
+		Assert.assertEquals(currentSize+1, tasks.size());		
 		
 		// Clean up
 		taskservice.delete(task);
+		tasks = taskservice.findAll();
+		Assert.assertEquals(currentSize, tasks.size());
 	}
 
 	@Test
@@ -106,6 +116,8 @@ public class TaskServiceTest {
 				
 				// Clean up
 				taskservice.delete(listTask);
+				tasks = taskservice.findAll();
+				Assert.assertEquals(currentSize, tasks.size());
 				
 			}
 		}
