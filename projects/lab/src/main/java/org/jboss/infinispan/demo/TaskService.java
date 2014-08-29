@@ -74,8 +74,9 @@ public class TaskService {
 
 	
 	public void update(Task task) {
-		em.merge(task);
-		cache.replace(task.getId(),task);
+		Task newTask = em.merge(task);
+		em.detach(newTask);
+		cache.replace(task.getId(),newTask);
 	}
 	
 	@PostConstruct
