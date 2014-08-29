@@ -16,6 +16,11 @@ import javax.persistence.criteria.Root;
 import org.infinispan.Cache;
 import org.jboss.infinispan.demo.model.Task;
 
+/**
+ * This class is used to query, insert or update Task object.
+ * @author tqvarnst
+ *
+ */
 @Stateless
 public class TaskService {
 
@@ -30,6 +35,8 @@ public class TaskService {
 	/**
 	 * This methods should return all cache entries, currently contains mockup code. 
 	 * @return
+	 * 
+	 * DONE: Replace implementation with Cache.values()
 	 */
 	public Collection<Task> findAll() {
 		return cache.values();
@@ -48,6 +55,12 @@ public class TaskService {
         return em.createQuery(criteriaQuery).getResultList();
 	}
 
+	/**
+	 * This method persists a new Task instance
+	 * @param task
+	 * 
+	 * DONE: Add implementation to also update the Cache with the new object
+	 */
 	public void insert(Task task) {
 		if(task.getCreatedOn()==null) {
 			task.setCreatedOn(new Date());
@@ -56,12 +69,36 @@ public class TaskService {
 		cache.put(task.getId(),task);
 	}
 
-	
+
+	/**
+	 * This method persists an existing Task instance
+	 * @param task
+	 * 
+	 * DONE: Add implementation to also update the Object in the Cache
+	 */
 	public void update(Task task) {
 		em.merge(task);
 		cache.replace(task.getId(),task);
 	}
 	
+	/**
+	 * This method deletes an Task from the persistence store
+	 * @param task
+	 * 
+	 * DONE: Add implementation to also delete the object from the Cache
+	 */
+	public void delete(Task task) {
+		//Note object may be detached so we need to tell it to remove based on reference
+		em.remove(em.getReference(task.getClass(),task.getId()));
+		cache.remove(task.getId());
+	}
+	
+	
+	/**
+	 * This method is called after construction of this SLSB.
+	 * 
+	 * DONE: Replace implementation to read existing Tasks from the database and add them to the cache
+	 */
 	@PostConstruct
 	public void startup() {
 		

@@ -13,6 +13,13 @@ import org.infinispan.eviction.EvictionStrategy;
 import org.infinispan.manager.DefaultCacheManager;
 import org.infinispan.manager.EmbeddedCacheManager;
 
+/**
+ * This is Class will be used to configure JDG Cache
+ * @author tqvarnst
+ * 
+ * DONE: Add implementation that Produces configuration for the default cache
+ *
+ */
 public class Config {
 
 	private EmbeddedCacheManager manager;
