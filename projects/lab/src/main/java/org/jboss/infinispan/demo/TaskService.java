@@ -62,8 +62,8 @@ public class TaskService {
 	 * DONE: Add implementation to also update the Object in the Cache
 	 */
 	public void update(Task task) {
-		em.merge(task);
-		cache.replace(task.getId(),task);
+		Task newTask = em.merge(task);
+		cache.replace(task.getId(),newTask);
 	}
 	
 	/**
