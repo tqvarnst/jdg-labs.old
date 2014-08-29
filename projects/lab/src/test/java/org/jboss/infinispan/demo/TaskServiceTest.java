@@ -91,5 +91,30 @@ public class TaskServiceTest {
 		taskservice.delete(task);
 		Assert.assertEquals(orgsize, taskservice.findAll().size());
 	}
+	
+	@Test
+	@InSequence(5)
+	public void testUpdateDifferentTask() {
+		int orgsize = taskservice.findAll().size();
+		Task task = new Task();
+		task.setTitle("This is the second test task");
+		task.setCreatedOn(new Date());
+		taskservice.insert(task);
+		Assert.assertEquals(orgsize+1, taskservice.findAll().size());
+
+		log.info("###### Inserted task with id " + task.getId());
+		task.setDone(true);
+		task.setCompletedOn(new Date());
+		taskservice.update(task);
+		Assert.assertEquals(orgsize+1, taskservice.findAll().size());
+		Assert.assertNotNull(task.getCompletedOn());
+		Assert.assertEquals(true,task.isDone());
+		
+		task.setDone(false);
+		taskservice.update(task);
+		
+		taskservice.delete(task);
+		Assert.assertEquals(orgsize, taskservice.findAll().size());
+	}
 
 }

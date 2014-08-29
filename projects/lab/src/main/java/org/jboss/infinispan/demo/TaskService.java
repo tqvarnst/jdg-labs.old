@@ -63,8 +63,8 @@ public class TaskService {
 	 */
 	public void update(Task task) {
 		Task newTask = em.merge(task);
+		em.detach(newTask);
 		cache.replace(task.getId(),newTask);
-		em.flush();
 	}
 	
 	/**
