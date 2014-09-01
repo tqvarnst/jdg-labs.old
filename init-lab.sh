@@ -51,7 +51,8 @@ function print_usage() {
 function setup_eap_with_modules() {
 	# make some checks first before proceeding.	
 	DOWNLOADS=($EAP $JDG_LIBRARY_MODUELS $HOTROD_MODULES)
-
+	
+	
 	for DONWLOAD in ${DOWNLOADS[@]}
 	do
 		if [[ -r $SRC_DIR/$DONWLOAD || -L $SRC_DIR/$DONWLOAD ]]; then
@@ -65,28 +66,24 @@ function setup_eap_with_modules() {
 		fi
 	done
 
-	# Create the target directory if it does not already exist.
-	if [ ! -x target ]; then
+	# Create the JBOSS_HOME directory if it does not already exist.
+	if [ ! -x ${JBOSS_HOME} ]; then
 			echo "  - creating the target directory..."
 			echo
-			mkdir target
+			mkdir -p ${JBOSS_HOME}
 	else
 			echo "  - detected target directory, moving on..."
 			echo
 	fi
 
-	# Move the old JBoss instance, if it exists, to the OLD position.
-	if [ -x $JBOSS_HOME ]; then
-			echo "  - existing JBoss Enterprise EAP 6 detected..."
-			echo
-			echo "  - moving existing JBoss Enterprise EAP 6 aside..."
-			echo
-			rm -rf $JBOSS_HOME.OLD
-			mv $JBOSS_HOME $JBOSS_HOME.OLD
-	fi
+	pushd ${JBOSS_HOME}/.. >/dev/null
+	EXTRACT_DIR=`pwd`
+	popd >/dev/null
+
 	echo Unpacking new JBoss Enterprise EAP 6...
 	echo
-	unzip -q -d target $SRC_DIR/$EAP
+		
+	unzip -q -d ${EXTRACT_DIR} $SRC_DIR/$EAP
 
 	# Creating and admin user with admin-123 as password
 	echo "Adding admin user"
@@ -108,6 +105,20 @@ function setup_eap_with_modules() {
 	rm -rf  ${tmpdir}  
 	
 	echo "Done setting up EAP with modules"	
+}
+
+function setup_eap_node_with_modules() {
+	NODE_NAME=$1
+
+	ORG_JBOSS_HOME=$JBOSS_HOME
+	
+	JBOSS_HOME=./target/${NODE_NAME}/jboss-eap-6.3
+	
+	setup_eap_with_modules
+	
+	# Reset JBOSS_HOME to it's original value
+	JBOSS_HOME=$ORG_JBOSS_HOME
+		
 }
 
 
@@ -248,10 +259,14 @@ echo "Setting up the ${DEMO} environment for Lab ${LAB_TO_SETUP}"
 echo
 
 case "${LAB_TO_SETUP}" in 
-	1|2|2b)
+	1|2|3)
 		setup_eap_with_modules
 		;;
-	3)
+	4)
+		setup_eap_node_with_modules node1
+		setup_eap_node_with_modules node2
+		;;
+	5)
 		setup_eap_with_modules
 		setup_jdg_node_one
 		;;
