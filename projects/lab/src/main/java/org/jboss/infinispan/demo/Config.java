@@ -18,6 +18,13 @@ import org.infinispan.manager.DefaultCacheManager;
 import org.infinispan.manager.EmbeddedCacheManager;
 import org.jboss.infinispan.demo.model.Task;
 
+/**
+ * This is Class will be used to configure JDG Cache
+ * @author tqvarnst
+ * 
+ * DONE: Add configuration to enable indexing, but do not specify field
+ *
+ */
 public class Config {
 
 	private EmbeddedCacheManager manager;
