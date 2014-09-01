@@ -1,6 +1,5 @@
 package org.jboss.infinispan.demo;
 
-import java.lang.annotation.ElementType;
 import java.util.Properties;
 
 import javax.annotation.PreDestroy;
@@ -8,7 +7,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
 
-import org.hibernate.search.cfg.SearchMapping;
 import org.infinispan.configuration.cache.Configuration;
 import org.infinispan.configuration.cache.ConfigurationBuilder;
 import org.infinispan.configuration.global.GlobalConfiguration;
@@ -16,13 +14,12 @@ import org.infinispan.configuration.global.GlobalConfigurationBuilder;
 import org.infinispan.eviction.EvictionStrategy;
 import org.infinispan.manager.DefaultCacheManager;
 import org.infinispan.manager.EmbeddedCacheManager;
-import org.jboss.infinispan.demo.model.Task;
 
 /**
  * This is Class will be used to configure JDG Cache
  * @author tqvarnst
  * 
- * DONE: Add configuration to enable indexing, but do not specify field
+ * DONE: Remove config for indexing "title" field specificially, but still keep indexing configuration
  *
  */
 public class Config {
