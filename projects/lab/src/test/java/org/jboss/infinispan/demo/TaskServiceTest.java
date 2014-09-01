@@ -52,25 +52,29 @@ public class TaskServiceTest {
 	@InSequence(2)
 	public void testRetrivingTasks() {
 		Collection<Task> tasks = taskservice.findAll();
-		Assert.assertEquals(5, tasks.size());
+		Assert.assertNotNull(tasks);
 	}
 
 	@Test
 	@InSequence(3)
 	public void testInsertTask() {
+		int orgsize = taskservice.findAll().size();
 		Task task = new Task();
 		task.setTitle("This is a test task");
 		task.setCreatedOn(new Date());
 		taskservice.insert(task);
-		Collection<Task> tasks = taskservice.findAll();
-		Assert.assertEquals(6, tasks.size());
+		Assert.assertEquals(orgsize+1, taskservice.findAll().size());
+		
+		taskservice.delete(task);
+		Assert.assertEquals(orgsize, taskservice.findAll().size());
 	}
 
 	@Test
 	@InSequence(4)
 	public void testUpdateTask() {
+		int orgsize = taskservice.findAll().size();
 		Task task = new Task();
-		task.setTitle("THIS IS A TEST TASK QWERTY!123456");
+		task.setTitle("This is the second test task");
 		task.setCreatedOn(new Date());
 		taskservice.insert(task);
 
@@ -78,23 +82,22 @@ public class TaskServiceTest {
 		task.setDone(true);
 		task.setCompletedOn(new Date());
 		taskservice.update(task);
-
-		Collection<Task> tasks = taskservice.findAll();
-		Assert.assertEquals(7,tasks.size());
+		Assert.assertEquals(orgsize+1, taskservice.findAll().size());
 		
-		for (Task listTask : tasks) {
-			if("THIS IS A TEST TASK QWERTY!123456".equals(listTask.getTitle())) {
+		for (Task listTask : taskservice.findAll()) {
+			if("This is the second test task".equals(listTask.getTitle())) {
 				Assert.assertNotNull(listTask.getCompletedOn());
 				Assert.assertEquals(true,listTask.isDone());
+				taskservice.delete(listTask);
+				Assert.assertEquals(orgsize, taskservice.findAll().size());
 			}
-			log.info("#### Found Task with id " + listTask.getId() + ", and title " + listTask.getTitle() + ", and version " + listTask.getVersion());
 		}
 	}
 	
 	@Test
 	@InSequence(5)
 	public void testFilterTask() {
-		Collection<Task> tasks = taskservice.filter("test");
+		Collection<Task> tasks = taskservice.filter("EAP");
 		Assert.assertEquals(2, tasks.size());
 		tasks = taskservice.filter("SELL");
 		Assert.assertEquals(2, tasks.size());

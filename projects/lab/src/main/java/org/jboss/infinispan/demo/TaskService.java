@@ -42,6 +42,13 @@ public class TaskService {
 		return cache.values();
 	}
 	
+	/**
+	 * This method filters task based on the input
+	 * @param input - string to filter on
+	 * @return
+	 * 
+	 * DONE: The current implementation is database query, replace it with a JDG query instead
+	 */
 	public Collection<Task> filter(String input) {
 		SearchManager sm = Search.getSearchManager(cache);
 		QueryBuilder qb = sm.buildQueryBuilderForClass(Task.class).get();
@@ -51,19 +58,14 @@ public class TaskService {
 		for (Object object : cq) {
 			tasks.add((Task) object);
 		}
-		return tasks;	
-//		log.info("### Querying the database for filtered tasks!!!!");
-//		final CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-//        final CriteriaQuery<Task> criteriaQuery = criteriaBuilder.createQuery(Task.class);
-//		
-//        Root<Task> root = criteriaQuery.from(Task.class);
-//        criteriaQuery.where(
-//        		criteriaBuilder.like(
-//        				criteriaBuilder.upper(root.get("title").as(String.class)), 
-//        				"%" + input.toUpperCase() + "%"));
-//        return em.createQuery(criteriaQuery).getResultList();
+		return tasks;
 	}
 
+	/**
+	 * This method persists a new Task instance
+	 * @param task
+	 * 
+	 */
 	public void insert(Task task) {
 		if(task.getCreatedOn()==null)
 			task.setCreatedOn(new Date());
@@ -71,13 +73,34 @@ public class TaskService {
 		cache.put(task.getId(),task);
 	}
 
-	
+
+	/**
+	 * This method persists an existing Task instance
+	 * @param task
+	 * 
+	 */
 	public void update(Task task) {
 		Task newTask = em.merge(task);
 		em.detach(newTask);
 		cache.replace(task.getId(),newTask);
 	}
 	
+	/**
+	 * This method deletes an Task from the persistence store
+	 * @param task
+	 * 
+	 */
+	public void delete(Task task) {
+		//Note object may be detached so we need to tell it to remove based on reference
+		em.remove(em.getReference(task.getClass(),task.getId()));
+		cache.remove(task.getId());
+	}
+	
+	
+	/**
+	 * This method is called after construction of this SLSB.
+	 * 
+	 */
 	@PostConstruct
 	public void startup() {
 		
