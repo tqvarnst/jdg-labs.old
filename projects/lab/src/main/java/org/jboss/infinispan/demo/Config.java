@@ -17,7 +17,7 @@ import org.infinispan.manager.EmbeddedCacheManager;
  * This is Class will be used to configure JDG Cache
  * @author tqvarnst
  * 
- * DONE: Add implementation that Produces configuration for the default cache
+ * FIXME: Add configuration to enable indexing of title field of the Task class
  *
  */
 public class Config {
