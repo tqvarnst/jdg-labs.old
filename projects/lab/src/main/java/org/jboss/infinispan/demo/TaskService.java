@@ -25,9 +25,6 @@ import org.jboss.infinispan.demo.model.Task;
 
 @Stateless
 public class TaskService {
-
-	@PersistenceContext
-    EntityManager em;
 	
 	@Inject
 	Cache<Long,Task> cache;
@@ -68,7 +65,7 @@ public class TaskService {
 	public void insert(Task task) {
 		if(task.getCreatedOn()==null)
 			task.setCreatedOn(new Date());
-		em.persist(task);
+		task.setId(new Long(cache.size()+1));
 		cache.put(task.getId(),task);
 	}
 
@@ -79,9 +76,7 @@ public class TaskService {
 	 * 
 	 */
 	public void update(Task task) {
-		Task newTask = em.merge(task);
-		em.detach(newTask);
-		cache.replace(task.getId(),newTask);
+		cache.replace(task.getId(),task);
 	}
 	
 	/**
@@ -91,7 +86,6 @@ public class TaskService {
 	 */
 	public void delete(Task task) {
 		//Note object may be detached so we need to tell it to remove based on reference
-		em.remove(em.getReference(task.getClass(),task.getId()));
 		cache.remove(task.getId());
 	}
 	
@@ -102,18 +96,6 @@ public class TaskService {
 	 */
 	@PostConstruct
 	public void startup() {
-		
-		log.info("### Querying the database for tasks!!!!");
-		final CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-		final CriteriaQuery<Task> criteriaQuery = criteriaBuilder.createQuery(Task.class);
-	
-		Root<Task> root = criteriaQuery.from(Task.class);
-		criteriaQuery.select(root);
-		Collection<Task> resultList = em.createQuery(criteriaQuery).getResultList();
-		
-		for (Task task : resultList) {
-			this.insert(task);
-		}
 		
 	}
 	

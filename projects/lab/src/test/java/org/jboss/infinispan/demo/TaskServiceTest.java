@@ -35,9 +35,6 @@ public class TaskServiceTest {
 				.addClass(Config.class)
 				.addClass(Task.class)
 				.addClass(TaskService.class)
-				.addAsResource("import.sql")
-				.addAsResource("META-INF/persistence.xml",
-						"META-INF/persistence.xml")
 				.addAsWebInfResource(new File("src/main/webapp/WEB-INF/jboss-deployment-structure.xml"))
 				.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 	}
@@ -97,12 +94,37 @@ public class TaskServiceTest {
 	@Test
 	@InSequence(5)
 	public void testFilterTask() {
+		Task t1 = generateTestTasks("Sell EAP to customer A", false);
+		Task t2 = generateTestTasks("Get FeedBack from EAP customers", false);
+		Task t3 = generateTestTasks("Get FeedBack from JDG custoers", true);
+		Task t4 = generateTestTasks("Sell JDG to customer B", false);
+		Task t5 = generateTestTasks("Pickup kids from daycare", false);
+		
 		Collection<Task> tasks = taskservice.filter("EAP");
 		Assert.assertEquals(2, tasks.size());
 		tasks = taskservice.filter("SELL");
 		Assert.assertEquals(2, tasks.size());
 		tasks = taskservice.filter("FeedBack");
 		Assert.assertEquals(2, tasks.size());
+		
+		taskservice.delete(t1);
+		taskservice.delete(t2);
+		taskservice.delete(t3);
+		taskservice.delete(t4);
+		taskservice.delete(t5);
 	}
 
+	private Task generateTestTasks(String title, boolean done) {
+		Task task = new Task();
+		task.setTitle(title);
+		if(done) {
+			task.setCompletedOn(new Date());
+			task.setDone(true);
+		}
+		taskservice.insert(task);
+		return task;
+	}
+	
+	
+	
 }

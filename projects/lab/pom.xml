@@ -129,7 +129,6 @@
 				<version>7.5.Final</version>
 				<configuration>
 					<hostname>localhost</hostname>
-					<port>9999</port>
 					<username>admin</username>
 					<password>admin-123</password>
 				</configuration>
