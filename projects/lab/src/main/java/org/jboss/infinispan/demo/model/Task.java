@@ -21,10 +21,9 @@ import org.hibernate.search.annotations.Store;
  * This class is the JPA entity of a Task
  * @author tqvarnst
  *
- * DONE: Add @Indexed annotation to the class and @Field(store = Store.YES) to the title field.
+ * FIXME: Add @Indexed annotation to the class and @Field(store = Store.YES) to the title field.
  */
 @Entity
-@Indexed
 public class Task implements Serializable {
 
 	private static final long serialVersionUID = 2315323429163437300L;
@@ -38,7 +37,6 @@ public class Task implements Serializable {
 	@Column(name = "version")
 	private int version;
 
-	@Field(store = Store.YES)
 	@Column(length = 100)
 	private String title;
 

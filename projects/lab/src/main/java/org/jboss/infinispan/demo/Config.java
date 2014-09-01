@@ -22,7 +22,7 @@ import org.jboss.infinispan.demo.model.Task;
  * This is Class will be used to configure JDG Cache
  * @author tqvarnst
  * 
- * DONE: Add configuration to enable indexing, but do not specify field
+ * FIXME: Remove configuration as to which fields to index.
  *
  */
 public class Config {
@@ -40,12 +40,12 @@ public class Config {
 					// configuration and allows for duplicate JMX domains
 					.build();
 			
-//			SearchMapping mapping = new SearchMapping();
-//			mapping.entity(Task.class).indexed().providedId()
-//			      .property("title", ElementType.METHOD).field();
+			SearchMapping mapping = new SearchMapping();
+			mapping.entity(Task.class).indexed().providedId()
+			      .property("title", ElementType.METHOD).field();
 			 
 			Properties properties = new Properties();
-//			properties.put(org.hibernate.search.Environment.MODEL_MAPPING, mapping);
+			properties.put(org.hibernate.search.Environment.MODEL_MAPPING, mapping);
 			properties.put("default.directory_provider", "ram");
 		
 			
