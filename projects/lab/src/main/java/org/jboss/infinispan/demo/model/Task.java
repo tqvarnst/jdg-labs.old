@@ -21,7 +21,6 @@ import org.hibernate.search.annotations.Store;
  * This class is the JPA entity of a Task
  * @author tqvarnst
  *
- * DONE: Add @Indexed annotation to the class and @Field(store = Store.YES) to the title field.
  */
 @Entity
 @Indexed

@@ -19,7 +19,7 @@ import org.infinispan.manager.EmbeddedCacheManager;
  * This is Class will be used to configure JDG Cache
  * @author tqvarnst
  * 
- * DONE: Remove config for indexing "title" field specificially, but still keep indexing configuration
+ * FIXME: Add Cluster configuration and add transport config from jgroups-udp.xml
  *
  */
 public class Config {
