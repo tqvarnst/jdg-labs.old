@@ -1,6 +1,8 @@
 # Lab Guide 1
 This explains the steps for lab 1, either follow them step-by-step or if you feel adventurous read the overview and try to accomplish goals without the help of the step-by-step
 
+**NOTE:** If you are looking at the PDF version and have problems with for example copying text, the original Markdown is available ![here](https://github.com/tqvarnst/jdg-labs/blob/master/projects/lab-guides/lab1-guide.md).
+
 
 ## Overview of Lab 1
 In lab 1 we will introduce JDG as a cache for a mockup application written in CDI, REST and AngularJS. The main steps in lab1 is to:
