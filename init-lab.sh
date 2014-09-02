@@ -8,7 +8,8 @@ JDG_TWO_HOME=./target/jboss-datagrid-6.3.0-server-two
 SERVER_DIR=$JBOSS_HOME/standalone/deployments/
 SERVER_CONF=$JBOSS_HOME/standalone/configuration/
 SRC_DIR=./installs
-EAP=jboss-eap-6.3.0.zip
+EAP_SERVER=jboss-eap-6.3.0.zip
+EAP_SERVER_MD5SUM=
 JDG_SERVER=jboss-datagrid-6.3.0-server.zip
 JDG_LIBRARY_MODUELS=jboss-datagrid-6.3.0-eap-modules-library.zip
 HOTROD_MODULES=jboss-datagrid-6.3.0-eap-modules-hotrod-java-client.zip
@@ -50,7 +51,7 @@ function print_usage() {
 
 function setup_eap_with_modules() {
 	# make some checks first before proceeding.	
-	DOWNLOADS=($EAP $JDG_LIBRARY_MODUELS $HOTROD_MODULES)
+	DOWNLOADS=($EAP_SERVER $JDG_LIBRARY_MODUELS $HOTROD_MODULES)
 	
 	
 	for DONWLOAD in ${DOWNLOADS[@]}
@@ -83,7 +84,7 @@ function setup_eap_with_modules() {
 	echo Unpacking new JBoss Enterprise EAP 6...
 	echo
 		
-	unzip -q -d ${EXTRACT_DIR} $SRC_DIR/$EAP
+	unzip -q -d ${EXTRACT_DIR} $SRC_DIR/$EAP_SERVER
 
 	# Creating and admin user with admin-123 as password
 	echo "Adding admin user"
@@ -98,11 +99,11 @@ function setup_eap_with_modules() {
 	rm -rf  ${tmpdir} 
 
 	# Adding Hotrod modules to EAP
-	echo "Adding Hotrod Modules to EAP"
-	tmpdir=`mktemp -d XXXXXXXX`
-	unzip -q -d ${tmpdir} ${SRC_DIR}/${HOTROD_MODULES}
-	cp -R ${tmpdir}/jboss-datagrid-6.3.0-eap-modules-hotrod-java-client/modules/* $JBOSS_HOME/modules/
-	rm -rf  ${tmpdir}  
+	#echo "Adding Hotrod Modules to EAP"
+	#tmpdir=`mktemp -d XXXXXXXX`
+	#unzip -q -d ${tmpdir} ${SRC_DIR}/${HOTROD_MODULES}
+	#cp -R ${tmpdir}/jboss-datagrid-6.3.0-eap-modules-hotrod-java-client/modules/* $JBOSS_HOME/modules/
+	#rm -rf  ${tmpdir}  
 	
 	echo "Done setting up EAP with modules"	
 }
@@ -200,7 +201,6 @@ function setup_jdg_node_two() {
 	
 	echo "Done setting up JDG Server Node Two"
 }
-
 
 #### Start the script
 
