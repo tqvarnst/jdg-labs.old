@@ -1,6 +1,9 @@
 # Lab Guide 1
 This explains the steps for lab 1, either follow them step-by-step or if you feel adventurous read the overview and try to accomplish goals without the help of the step-by-step
 
+![Image of Yaktocat](https://octodex.github.com/images/yaktocat.png)
+
+
 ## Overview of Lab 1
 In lab 1 we will introduce JDG as a cache for a mockup application written in CDI, REST and AngularJS. The main steps in lab1 is to:
 
