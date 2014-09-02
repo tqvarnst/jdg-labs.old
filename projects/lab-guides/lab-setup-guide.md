@@ -1,4 +1,4 @@
-# Lab Setup Guide
+# JDG and EAP Lab Setup Guide
 
 Follow this guide to setup the lab environment for JDG labs
 
