@@ -52,6 +52,6 @@ Follow this guide to setup the lab environment for JDG labs
  Select Existing Maven Project and click Next
  ![Select import](images/lab-guide-image-3.png)
  Browse to the project directory (~/jdg-workshops/project) and select all lab projects
- ![Select import](images/lab-guide-image-3.png)
+ ![Select import](images/lab-guide-image-4.png)
  
 4. Done
