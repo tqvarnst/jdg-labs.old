@@ -89,6 +89,7 @@ git clone https://github.com/tqvarnst/jdg-labs.git ${GIT_PROJECT} > /dev/null 2>
 mkdir ${INSTALL_DIR}/installs
 
 cp ${GIT_PROJECT}/init*.sh ${INSTALL_DIR}
+cp ${GIT_PROJECT}/example-settings.xml ${INSTALL_DIR}/
 cp ${GIT_PROJECT}/installs/rh-internal-download.sh ${INSTALL_DIR}/installs
 
 pushd ${GIT_PROJECT} > /dev/null
