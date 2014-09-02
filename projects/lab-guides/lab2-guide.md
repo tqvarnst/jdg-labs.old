@@ -4,7 +4,7 @@ This explains the steps for lab 2, either follow them step-by-step or if you fee
 ## Overview of Lab 1
 In lab 2 we will add a filter that via ajax automatically filter tasks based on a search string. In the initial project setup the UI and a filter method that uses DB queries are used implemented. You task is to replace the DB Query with a JDG Query and you will have to do this without modifying the org.jboss.infinspan.demo.model.Task class. 
 
-To to this we need to to the following:
+To to this we need to do the following:
 
 1. Update the pom.xml and add developer dependency to infinispan-query
 2. Update jboss-deployment-structure.xml to add runtime dependency to infinispan-query
