@@ -43,32 +43,32 @@ Follow this guide to setup the lab environment for JDG labs
   
 1. Start JBoss Developer Studio
 1. Turn off XML validation
-  Preferences -> Validation 
-  ![Turn off XML validation](images/lab-guide-image-1.png)
+  	Preferences -> Validation 
+  	![Turn off XML validation](images/lab-guide-image-1.png)
 
 1. Import the projects. Right click on the project area select Import -> Import ...
 
- ![Select import](images/lab-guide-image-2.png)
+ 	![Select import](images/lab-guide-image-2.png)
  
  Select Existing Maven Project and click Next
  
- ![Select import](images/lab-guide-image-3.png)
+	![Select import](images/lab-guide-image-3.png)
  
  Browse to the project directory (~/jdg-workshops/project) and select all lab projects
  
- ![Select import](images/lab-guide-image-4.png)
+	![Select import](images/lab-guide-image-4.png)
  
-1. At this point the workbench should have some compilation errors that looks something like this 
+1. At this point the workbench should have some compilation errors that looks something like this: 
 
- ![Error](images/lab-guide-image-5.png)
+	![Error](images/lab-guide-image-5.png)
  
 1. To fix this you need to enable a Maven profile for Arquillian by right clicking on each project and select Maven -> Select Maven Profile...
 
- ![Select Maven profile](images/lab-guide-image-6.png)
+ 	![Select Maven profile](images/lab-guide-image-6.png)
 
 1. And in the dialog check the following maven profiles as illustrated by the picture below.
 
- ![Select Maven profile](images/lab-guide-image-7.png)
+ 	![Select Maven profile](images/lab-guide-image-7.png)
 
 1. You should now have a workbench without some warnings, but with out Problem.
 1. You are ready to start with lab1
