@@ -27,5 +27,23 @@ Follow this guide to setup the lab environment for JDG labs
 
   `$ unzip jdg-labs.zip -d $HOME`
 
-2. Change directory into the lab root dir
-3. 
+1. Change directory into the lab root dir
+
+  `$ cd $HOME/jdg-workshops`
+  
+1. Setup the development environment with the provided script
+
+  `$ sh init-dev.sh`
+  
+2. Copy generated settings.xml to $HOME/.m2/ (don't forgett to backup any existins settings.xml)
+
+  `$ cp target/settings.xml ~/.m2/`
+  
+3. Start JBoss Developer Studio
+3. Turn off XML validation
+4. Import the projects
+4. 
+ 
+
+
+4. Done
