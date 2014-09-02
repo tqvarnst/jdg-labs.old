@@ -34,7 +34,7 @@ To assist with setting up the lab environment we have provided a shell script th
 		
 1. In another terminal (on the dev host) change directory to the project
 
-        $ cd project/todo
+        $ cd projects/lab1
         
 1. Run the JUnit test either in JBDS or by using command line. To run the test the ```arquillian-jbossas-remote-7``` profile will have to be activated.
 
@@ -86,7 +86,7 @@ In this step-by-step section we will add dependecies to the maven project so tha
 		
 	**Note:** We use a bom file to manage the versions of the dependencies, if you choose not to use the bom file, just specify the version directly in each dependency instead. 
 
-2. Now we need fix the class loading so that we are using the ccorrect JDG library in the container. 
+2. Now we need fix the class loading so that we are using the correct JDG library in the container. 
    
    JBoss EAP ships with infinispan libraries internally, but since are using JDG 6.3 we must make sure that we use the correct infinispan libraries/modules. One solution is to ship the JDG libraries in the WEB-INF/lib folder but that makes the WAR grow allot in since effecting not only deploymenttime, but we also have to create a new release to patch or update JDG. The other solution is to use the JDG modules new as of JDG 6.3.
 
@@ -144,6 +144,13 @@ to the class
 			em.merge(task);
 			cache.replace(task.getId(),task);
 		}
+		
+1.	Add the implementation of the delete method as shown below:
+
+		public void delete(Task task) {
+			em.remove(em.getReference(task.getClass(),task.getId()));
+			cache.remove(task.getId());
+		}
 
 1. We also need fill the cache with the existing values in the database using by adding the following method:
 		
@@ -164,7 +171,7 @@ to the class
 			
 		}
 
-1. Next update the TaskServiceTest class to make use of the jboss-deployment-structure.xml by uncomment the following line:
+1. Next make sure that the TaskServiceTest class adds the jboss-deployment-structure.xml, which should look like this:
 
 		.addAsWebInfResource(new File("src/main/webapp/WEB-INF/jboss-deployment-structure.xml"))
 
@@ -320,7 +327,7 @@ Then we put this class somewhere in our classpath (or even better in our source)
 			}
 		}
 		
-1. Soon we are ready to deploy the application, but first we should add the Config class to Arquillian by uncomment the following line in TaskServiceTest.java
+1. Soon we are ready to deploy the application, but first we need to make sure that test passes. Before we run the test, lets check that TaskServiceTest.java add the Config class to the test, liek this:
 
 		.addClass(Config.class)
 		
@@ -330,6 +337,6 @@ Then we put this class somewhere in our classpath (or even better in our source)
 
 		$ mvn package jboss-as:deploy
 		
-1. Test the application by opening a browser window to [http://localhost:8080/todo](http://localhost:8080/todo)
+1. Test the application by opening a browser window to [](http://localhost:8080/todo)
 
 1. Congratulations you are done with lab1.
