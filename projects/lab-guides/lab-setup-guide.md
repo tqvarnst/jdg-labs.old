@@ -54,7 +54,7 @@ Follow this guide to setup the lab environment for JDG labs
  Browse to the project directory (~/jdg-workshops/project) and select all lab projects
  ![Select import](images/lab-guide-image-4.png)
  
-1. At this point you should have a compilation error that looks like this ![Error](images/lab-guide-image-5.png)
+1. At this point the workbench should have some compilation errors that looks something like this ![Error](images/lab-guide-image-5.png)
 1. To fix this you need to enable a Maven profile for Arquillian by right clicking on each project and select Maven -> Select Maven Profile...
 
  ![Select Maven profile](images/lab-guide-image-6.png)
