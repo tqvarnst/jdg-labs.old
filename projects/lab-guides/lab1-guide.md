@@ -337,6 +337,6 @@ Then we put this class somewhere in our classpath (or even better in our source)
 
 		$ mvn package jboss-as:deploy
 		
-1. Test the application by opening a browser window to [](http://localhost:8080/todo)
+1. Test the application by opening a browser window to [http://localhost:8080/todo]()
 
 1. Congratulations you are done with lab1.
