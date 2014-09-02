@@ -71,6 +71,6 @@ Follow this guide to setup the lab environment for JDG labs
 
  	![Select Maven profile](images/lab-guide-image-7.png)
 
-1. You should now have a workbench without some warnings, but with out Problem.
-1. You are ready to start with lab1
+1. You should now have a workbench with warnings, but without problems.
+1. You are now ready to start with lab1
 
