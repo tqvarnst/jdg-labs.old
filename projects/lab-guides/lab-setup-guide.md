@@ -43,8 +43,8 @@ Follow this guide to setup the lab environment for JDG labs
   
 1. Start JBoss Developer Studio
 1. Turn off XML validation
-  	
-	Preferences -> Validation 
+ 
+ 	Preferences -> Validation 
   	![Turn off XML validation](images/lab-guide-image-1.png)
 
 1. Import the projects. Right click on the project area select Import -> Import ...
