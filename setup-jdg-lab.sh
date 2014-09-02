@@ -66,7 +66,11 @@ git --version >/dev/null 2>&1 || { echo >&2 "Git is required but not installed y
 
 mkdir "${INSTALL_DIR}" >/dev/null 2>&1 || { echo >&2 "Failed to create dir, Aborting!!!"; exit 99; }
 
-
+# Make Install dir full path even if it's a relative dirctory
+pushd ${INSTALL_DIR} > /dev/null
+INSTALL_DIR=`pwd`
+mkdir -p "projects/lab"
+popd > /dev/null
 
 # Get the name of the current branch
 #git rev-parse --abbrev-ref HEAD
@@ -82,11 +86,13 @@ LAB_ZIP_DIR=${WORKDIR}/${LAB_ZIP_DIR}
 echo "Cloning labs from github"
 git clone https://github.com/tqvarnst/jdg-labs.git ${GIT_PROJECT} > /dev/null 2>&1 || { echo >&2 "Failed to clone project from github, aborting"; exit 98; }
 
-cp -R ${GIT_PROJECT}/* ${INSTALL_DIR}
+#cp -R ${GIT_PROJECT}/* ${INSTALL_DIR}
 
 pushd ${GIT_PROJECT} > /dev/null
 
-LABS=(lab1 lab2)
+
+
+LABS=(lab1 lab2 lab3 lab4 lab5)
 
 for lab in ${LABS[*]}
 do
@@ -95,8 +101,8 @@ do
 	git checkout "${lab}-start"  >/dev/null 2>&1 || { echo >&2 "Failed to switch to branch ${lab}-start locally, aborting"; exit 96; }
 	pushd projects/lab > /dev/null
 	git archive -o "${LAB_ZIP_DIR}/${lab}.zip" --prefix="${lab}/" HEAD
-	unzip -qq "${LAB_ZIP_DIR}/${lab}.zip" -d "${WORKDIR}/${INSTALL_DIR}/projects" >/dev/null
-	wget -O "${WORKDIR}/${INSTALL_DIR}/projects/${lab}/${lab}-guide.pdf" https://gitprint.com/tqvarnst/jdg-labs/blob/master/projects/lab-guides/${lab}-guide.md?download
+	unzip -qq "${LAB_ZIP_DIR}/${lab}.zip" -d "${INSTALL_DIR}/projects" >/dev/null
+	wget -O "${INSTALL_DIR}/projects/${lab}/${lab}-guide.pdf" https://gitprint.com/tqvarnst/jdg-labs/blob/master/projects/lab-guides/${lab}-guide.md?download
 	popd >/dev/null
 	#echo "Currently in git branch $(git rev-parse --abbrev-ref HEAD)"
 done
@@ -108,7 +114,7 @@ do
 	git checkout "${lab}-solution"  >/dev/null 2>&1 || { echo >&2 "Failed to switch to branch ${lab}-solution locally, aborting"; exit 96; }
 	pushd projects/lab > /dev/null
 	git archive -o "${LAB_ZIP_DIR}/${lab}-solution.zip" --prefix="${lab}-solution/" HEAD
-	cp "${LAB_ZIP_DIR}/${lab}-solution.zip" "${WORKDIR}/${INSTALL_DIR}/projects/" >/dev/null
+	cp "${LAB_ZIP_DIR}/${lab}-solution.zip" "${INSTALL_DIR}/projects/" >/dev/null
 	popd >/dev/null
 	#echo "Currently in git branch $(git rev-parse --abbrev-ref HEAD)"
 done
