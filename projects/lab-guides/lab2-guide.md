@@ -20,11 +20,16 @@ To to this we need to do the following:
 
 1. Open pom.xml
 2. Select the dependencies tab
-  ![](images/lab2-image1.png)
+
+  ![img1](images/lab2-image1.png)
+  
 3. Click **Add...** button
 4. Type `infinispan-query` in the search field and select the managed version that should appear.
-  ![](images/lab2-image2.png)
+
+  ![img2](images/lab2-image2.png)
+  
 5. Change **Scope** to `provided` and Click **OK**
 6. Select the newly added dependency and click **Properties...**
 7. Remove the Type by deleting boundle.
-  ![](images/lab2-image3.png)
+  
+  ![img3](images/lab2-image3.png)
