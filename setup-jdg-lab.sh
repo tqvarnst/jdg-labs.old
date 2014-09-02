@@ -123,6 +123,8 @@ do
 done
 
 git checkout master >/dev/null 2>&1
+
+wget -O "${INSTALL_DIR}/lab-setup-guide.md" https://gitprint.com/tqvarnst/jdg-labs/blob/master/projects/lab-guides/lab-setup-guide.md?download
 popd > /dev/null
 
 rm -rf ${GIT_PROJECT}
