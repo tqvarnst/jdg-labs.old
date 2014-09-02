@@ -333,6 +333,8 @@ Then we put this class somewhere in our classpath (or even better in our source)
 		
 1. Run the JUnit test by right clicking TaskServiceTest.java and select Run As ... -> JUnit Test
 
+	![Image of how to run junit test](images/lab1-image1.png)
+
 1. If everything is green we are ready to deploy the application with the following command in a terminal
 
 		$ mvn package jboss-as:deploy
