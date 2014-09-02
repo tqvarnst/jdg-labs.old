@@ -1,12 +1,11 @@
 # Lab Guide 1
 This explains the steps for lab 1, either follow them step-by-step or if you feel adventurous read the overview and try to accomplish goals without the help of the step-by-step
 
-![Image of CD](images/CD.png)
-
 
 ## Overview of Lab 1
 In lab 1 we will introduce JDG as a cache for a mockup application written in CDI, REST and AngularJS. The main steps in lab1 is to:
 
+1. Configure the environment for lab1
 1. Run the JUnit/Arquillian tests
 1. Install the mockup application and verify that is working
 1. Add dependencies to the maven project and to the WAR file for JDG
@@ -17,7 +16,15 @@ In lab 1 we will introduce JDG as a cache for a mockup application written in CD
 ## Step-by-Step
 The step-by-step guide is dived into 3 different sections matching the main steps in the overview.
 
-The First step over is to verify that the application build and deploy before we do anything else.
+The First step over is to setup the lab environment
+
+### Setup the lab environment
+To assist with setting up the lab environment we have provided a shell script that does this. 
+
+1. Run the shell script by standing in the jdg lab root directory (~/jdg-workshops) execute a command like this
+
+  		$ sh init-lab.sh --lab=1
+
 
 ### Install and build the mock project
 
