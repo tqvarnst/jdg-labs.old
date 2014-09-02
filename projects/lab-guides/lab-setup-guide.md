@@ -2,6 +2,8 @@
 
 Follow this guide to setup the lab environment for JDG labs
 
+**NOTE:** If you are looking at the PDF version and have problems with for example copying text, the original Markdown is available [here](https://github.com/tqvarnst/jdg-labs/blob/master/projects/lab-guides/lab-setup-guide.md).
+
 ## Prerequisits
 
 * Host operating system should be Linux or a BSD based os like Mac OS X.
