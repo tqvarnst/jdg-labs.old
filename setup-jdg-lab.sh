@@ -86,7 +86,10 @@ LAB_ZIP_DIR=${WORKDIR}/${LAB_ZIP_DIR}
 echo "Cloning labs from github"
 git clone https://github.com/tqvarnst/jdg-labs.git ${GIT_PROJECT} > /dev/null 2>&1 || { echo >&2 "Failed to clone project from github, aborting"; exit 98; }
 
-#cp -R ${GIT_PROJECT}/* ${INSTALL_DIR}
+mkdir ${INSTALL_DIR}/installs
+
+cp ${GIT_PROJECT}/init*.sh ${INSTALL_DIR}
+cp ${GIT_PROJECT}/installs/rh-internal-download.sh ${INSTALL_DIR}/installs
 
 pushd ${GIT_PROJECT} > /dev/null
 
@@ -125,7 +128,7 @@ popd > /dev/null
 rm -rf ${GIT_PROJECT}
 rm -rf ${LAB_ZIP_DIR}
 
-mkdir ${INSTALL_DIR}/installs
+
 	
 	
 
