@@ -46,9 +46,12 @@ Follow this guide to setup the lab environment for JDG labs
   Preferences -> Validation 
   ![Turn off XML validation](images/lab-guide-image-1.png)
 
-4. Import the projects
-4. 
+4. Import the projects. Right click on the project area select Import -> Import ...
+
+ ![Select import](images/lab-guide-image-2.png)
+ Select Existing Maven Project and click Next
+ ![Select import](images/lab-guide-image-3.png)
+ Browse to the project directory (~/jdg-workshops/project) and select all lab projects
+ ![Select import](images/lab-guide-image-3.png)
  
-
-
 4. Done
