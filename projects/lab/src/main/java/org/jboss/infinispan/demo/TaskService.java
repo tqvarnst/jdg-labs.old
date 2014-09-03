@@ -51,7 +51,7 @@ public class TaskService {
 	 */
 	public Collection<Task> filter(String input) {
 		SearchManager sm = Search.getSearchManager(cache);
-		QueryBuilder qb = sm.buildQueryBuilderForClass(Task.class).get();
+		QueryBuilder qb = sm.getSearchFactory().buildQueryBuilder().forEntity(Task.class).get();
 		Query q = qb.keyword().onField("title").matching(input).createQuery();
 		CacheQuery cq = sm.getQuery(q, Task.class);
 		List<Task> tasks = new ArrayList<Task>();
