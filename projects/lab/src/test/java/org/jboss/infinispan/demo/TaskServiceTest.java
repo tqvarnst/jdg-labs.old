@@ -116,5 +116,29 @@ public class TaskServiceTest {
 		taskservice.delete(task);
 		Assert.assertEquals(orgsize, taskservice.findAll().size());
 	}
+	
+	@Test
+	@InSequence(6)
+	public void testReadPerformance() {
+	
+		// Create 500 tasks
+		for (int i = 0; i < 500; i++) {
+			Task task = new Task();
+			task.setTitle("This is the " + i + " test task");
+			task.setCreatedOn(new Date());
+			taskservice.insert(task);
+		}
+		
+		long startTime = System.currentTimeMillis();
+		//Execute 1000 reads
+		for (int i = 0; i < 1000; i++) {
+			taskservice.findAll();
+		}
+		long stopTime = System.currentTimeMillis();
+		
+		log.info("#### Executeing 1000 reads took " + (stopTime-startTime) + " ms");
+		
+		Assert.assertTrue((stopTime-startTime)<400);
+	}
 
 }
