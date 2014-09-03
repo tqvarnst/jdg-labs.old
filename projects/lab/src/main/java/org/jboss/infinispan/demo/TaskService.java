@@ -49,16 +49,13 @@ public class TaskService {
 	 * 
 	 * DONE: The current implementation is database query, replace it with a JDG query instead
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Collection<Task> filter(String input) {
 		SearchManager sm = Search.getSearchManager(cache);
 		QueryBuilder qb = sm.getSearchFactory().buildQueryBuilder().forEntity(Task.class).get();
 		Query q = qb.keyword().onField("title").matching(input).createQuery();
 		CacheQuery cq = sm.getQuery(q, Task.class);
-		List<Task> tasks = new ArrayList<Task>();
-		for (Object object : cq) {
-			tasks.add((Task) object);
-		}
-		return tasks;
+		return (Collection<Task>)(List)cq.list(); //Since we only Query Task.class we can safely cast this
 	}
 
 	/**
