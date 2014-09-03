@@ -1,8 +1,36 @@
-# JDG + EAP Lab Guide 2
-This explains the steps for lab 2, either follow them step-by-step or if you feel adventurous read the overview and try to accomplish goals without the help of the step-by-step
+# JDG + EAP Lab 2 Guide
+This explains the steps for lab 2, either follow them step-by-step or if you 
+feel adventurous read the overview and try to accomplish goals without the help 
+of the step-by-step guide.
 
-## Overview of Lab 1
-In this lab we will add a filter that via ajax automatically filter tasks based on a search string. In the initial project setup the UI and a filter method that uses DB queries are used implemented. You task is to replace the DB Query with a JDG Query and you will have to do this without modifying the org.jboss.infinspan.demo.model.Task class. 
+## Background 
+In Lab 1 we implemented a side cache using JDG to speed up reads, but master 
+data store is still the database. So far however the data access is only a using
+the common CRUD (Create, Read, Update and Delete) operations. Since JDG is a 
+key/value store these operations are easy to implement. However what happens if
+we get a requirement for querying? 
+
+Well JDG has very competent possibility to do querying in library mode (remote
+is still tech preview, but coming soon)
+
+## Use-case
+During your vacation a competing vendor released a has a filter search feature
+that makes it easier to manage allot of tasks. Another developer that wasn't
+familiar with JDG implemented UI for filtering and in the data access
+layer he implemented the filter method as a JPA query. This has once again put 
+more load on the database and to fix this we should migrate to JDG queries
+instead.
+
+However because the Task data model is used in the native mobile application and
+since it will take a while before we can update the mobile application you are 
+nor allowed to change the org.jboss.infinspan.demo.model.Task class.
+
+## Objectives
+Your task in Lab 2 re-implement the filtering method, but using JDG Queries. 
+The UI and REST methods are already implemented.
+
+Basically you should replace the DB Query with a JDG Query and you will have to 
+do this without modifying the org.jboss.infinspan.demo.model.Task class. 
 
 To to this we need to do the following:
 

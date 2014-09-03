@@ -1,14 +1,39 @@
-# Lab Guide 1
-This explains the steps for lab 1, either follow them step-by-step or if you feel adventurous read the overview and try to accomplish goals without the help of the step-by-step
+# JDG + EAP Lab 1 Guide
+This explains the steps for lab 1, either follow them step-by-step or if you 
+feel adventurous read the overview and try to accomplish goals without the help 
+of the step-by-step
 
-**NOTE:** If you are looking at the PDF version and have problems with for example copying text, the original Markdown is available [here](https://github.com/tqvarnst/jdg-labs/blob/master/projects/lab-guides/lab1-guide.md).
+**NOTE:** If you are looking at the PDF version and have problems with for 
+example copying text, the original Markdown is available 
+[here](http://bit.ly/Ybh0Hn).
 
+## Background 
+Acme Inc has released a new cloud service application to manage tasks lists 
+called Todo. The application is a new HTML5 interface using AngularJS (don't 
+worry, you don't have to know AngularJS to complete the labs).  For server 
+side it is using CDI and REST on JBoss EAP to expose CRUD services. The 
+application was initially only released using HTML5 clients, but following the 
+successful start Acme have also implemented native applications for Android and 
+iPhone that are using the same REST services. 
 
-## Overview of Lab 1
-In lab 1 we will introduce JDG as a cache for a mockup application written in CDI, REST and AngularJS. The main steps in lab1 is to:
+The challenge for Acme right now is that the traffic to the backend is steadily
+increasing and within 6 month they predict that the database they are using (H2)
+will be overloaded and they will either have to buy more hardware or rewrite the
+application using a NoSQL store.
+
+However during a sales meeting with Red Hat the JBoss Solution Architect 
+suggested that implementing JDG as a side cache might be a easier solution, 
+where minimal changes to the application would have to be implemented.
+
+## Goals
+Increase read performance 10 times by implementing JDG as side cache to the H2 
+database without changing the UI, REST service or data model object. 
+
+## Objectives
+The main steps in lab1 is to:
 
 1. Configure the environment for lab1
-1. Run the JUnit/Arquillian tests
+1. Run the JUnit/Arquillian tests (performance test should fail)
 1. Install the mockup application and verify that is working
 1. Add dependencies to the maven project and to the WAR file for JDG
 1. Add dependencies to the JDG modules in EAP via jboss-deployment-structure.xml
