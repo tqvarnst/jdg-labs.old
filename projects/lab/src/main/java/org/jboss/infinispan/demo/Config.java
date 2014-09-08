@@ -47,8 +47,21 @@ public class Config {
 
 			Configuration loc = new ConfigurationBuilder().jmxStatistics()
 					.enable() // Enable JMX statistics
-					.clustering().cacheMode(CacheMode.DIST_SYNC) // Set Cache mode to DISTRIBUTED with SYNCHRONOUS replication
-					.hash().numOwners(2)
+					.clustering().cacheMode(CacheMode.REPL_SYNC) // Set Cache mode to DISTRIBUTED with SYNCHRONOUS replication
+					//.hash().numOwners(2)
+					.persistence()
+						.addSingleFileStore()
+							.location(System.getProperty("jboss.home.dir") + "/cache-store")
+							.fetchPersistentState(true)
+							.ignoreModifications(true)
+							.shared(false)
+							.preload(false)
+							.async()
+								.enable()
+								.threadPoolSize(500)
+								.flushLockTimeout(1)
+								.modificationQueueSize(1024)
+								.shutdownTimeout(25000)
 					.eviction().strategy(EvictionStrategy.NONE) // Do not evic objects
 					.indexing().enable().indexLocalOnly(false)
 					.withProperties(properties).build();

@@ -35,6 +35,7 @@ public class TaskServiceTest {
 				.addClass(Config.class)
 				.addClass(Task.class)
 				.addClass(TaskService.class)
+				.addAsResource("jgroups-udp.xml")
 				.addAsWebInfResource(new File("src/main/webapp/WEB-INF/jboss-deployment-structure.xml"))
 				.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 	}
@@ -83,12 +84,13 @@ public class TaskServiceTest {
 		
 		for (Task listTask : taskservice.findAll()) {
 			if("This is the second test task".equals(listTask.getTitle())) {
+				log.info("### task =" + listTask.getTitle());
 				Assert.assertNotNull(listTask.getCompletedOn());
 				Assert.assertEquals(true,listTask.isDone());
 				taskservice.delete(listTask);
-				Assert.assertEquals(orgsize, taskservice.findAll().size());
 			}
 		}
+		Assert.assertEquals(orgsize, taskservice.findAll().size());
 	}
 	
 	@Test
