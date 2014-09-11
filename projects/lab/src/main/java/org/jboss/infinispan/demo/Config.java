@@ -74,14 +74,8 @@ public class Config {
 		return manager;
 	}
 		
-	@Produces
-	@RequestCache
-	@ConfigureCache("client-request-cache")
-	public Configuration getRequestCacheConfiguration() {
-		return new ConfigurationBuilder()
-				.expiration().lifespan(1,TimeUnit.DAYS)
-				.build();
-	}
+	//FIXME: Add code that will provide Configuration for a request cache using the @RequestCache qualifier
+	
 
 	@PreDestroy
 	public void cleanUp() {

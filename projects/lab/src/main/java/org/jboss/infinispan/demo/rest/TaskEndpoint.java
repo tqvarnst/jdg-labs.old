@@ -33,51 +33,66 @@ public class TaskEndpoint {
 	@Inject
 	TaskService taskService;
 	
-	@Inject
-	@RequestCache
-	private Cache<Long, String> requestCache;
 
 	Logger log = Logger.getLogger(this.getClass().getName());
 
 
+	/**
+	 * FIXME: Add request logging by adding user-agent Header to a request cache
+	 * @param task
+	 * @param headers
+	 * @return
+	 */
 	@POST
 	@Consumes("application/json")
 	public Response create(Task task, @Context HttpHeaders headers) {
-		requestCache.putAsync(System.nanoTime(),
-				headers.getRequestHeader("user-agent").get(0));
+//		requestCache.putAsync(System.nanoTime(), headers.getRequestHeader("user-agent").get(0));
 		taskService.insert(task);
 		return Response.created(
 				UriBuilder.fromResource(TaskEndpoint.class)
 						.path(String.valueOf(task.getId())).build()).build();
 	}
 
-
+	/**
+	 * FIXME: Add request logging by adding user-agent Header to a request cache
+	 * @param headers
+	 * @return
+	 */
 	@GET
 	@Produces("application/json")
 	public Collection<Task> listAll(@Context HttpHeaders headers) {
-		requestCache.putAsync(System.nanoTime(),
-				headers.getRequestHeader("user-agent").get(0));
+//		requestCache.putAsync(System.nanoTime(), headers.getRequestHeader("user-agent").get(0));
 		return taskService.findAll();
 	}
 
-	
+	/**
+	 * FIXME: Add request logging by adding user-agent Header to a request cache
+	 * @param value
+	 * @param headers
+	 * @return
+	 */
 	@GET
 	@Produces("application/json")
 	@Path("/filter/{value}")
 	public Collection<Task> filter(@PathParam("value") String value,
 			@Context HttpHeaders headers) {
-		requestCache.putAsync(System.nanoTime(),
-				headers.getRequestHeader("user-agent").get(0));
+//		requestCache.putAsync(System.nanoTime(), headers.getRequestHeader("user-agent").get(0));
 		return taskService.filter(value);
 	}
 
+	/**
+	 * FIXME: Add request logging by adding user-agent Header to a request cache
+	 * @param id
+	 * @param task
+	 * @param headers
+	 * @return
+	 */
 	@PUT
 	@Path("/{id:[0-9][0-9]*}")
 	@Consumes("application/json")
 	public Response update(@PathParam("id") Long id, Task task,
 			@Context HttpHeaders headers) {
-		requestCache.putAsync(System.nanoTime(),
-				headers.getRequestHeader("user-agent").get(0));
+//		requestCache.putAsync(System.nanoTime(), headers.getRequestHeader("user-agent").get(0));
 		taskService.update(task);
 		return Response.noContent().build();
 	}

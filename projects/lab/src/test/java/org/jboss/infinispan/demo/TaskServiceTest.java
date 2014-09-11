@@ -38,9 +38,9 @@ public class TaskServiceTest {
 	@Inject
 	private BIService biservice;
 
-	@Inject
-	@RequestCache
-	private Cache<Long, String> requestCache;
+//	@Inject
+//	@RequestCache
+//	private Cache<Long, String> requestCache;
 
 	@Deployment
 	public static WebArchive createDeployment() {
@@ -138,28 +138,28 @@ public class TaskServiceTest {
 	}
 
 
-	@Test
-	@InSequence(6)
-	public void testRequestCache() throws InterruptedException, ExecutionException {		
-		ArrayList<NotifyingFuture<String>> futures = new ArrayList<NotifyingFuture<String>>();
-		futures.add(requestCache.putAsync(System.nanoTime(), "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.78.2 (KHTML, like Gecko) Version/7.0.6 Safari/537.78.2"));
-		futures.add(requestCache.putAsync(System.nanoTime(), "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.78.2 (KHTML, like Gecko) Version/7.0.6 Safari/537.78.2"));
-		futures.add(requestCache.putAsync(System.nanoTime(), "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.78.2 (KHTML, like Gecko) Version/7.0.6 Safari/537.78.2"));
-		futures.add(requestCache.putAsync(System.nanoTime(), "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.133 Mobile Safari/535.19"));
-		futures.add(requestCache.putAsync(System.nanoTime(), "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.133 Mobile Safari/535.19"));
-		futures.add(requestCache.putAsync(System.nanoTime(), "Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A543 Safari/419.3"));
-		futures.add(requestCache.putAsync(System.nanoTime(), "Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A543 Safari/419.3"));
-		for (NotifyingFuture<String> notifyingFuture : futures) {
-			notifyingFuture.get();
-		}
-		Assert.assertEquals(7, requestCache.size());
-		
-		Map<String,Integer> userOsCount = biservice.getRequestStatiscsPerOs();
-		
-		Assert.assertEquals(3, userOsCount.get("Macintosh").intValue());
-		Assert.assertEquals(2, userOsCount.get("Android").intValue());
-		Assert.assertEquals(2, userOsCount.get("iPhone").intValue());
-	}
+//	@Test
+//	@InSequence(6)
+//	public void testRequestCache() throws InterruptedException, ExecutionException {		
+//		ArrayList<NotifyingFuture<String>> futures = new ArrayList<NotifyingFuture<String>>();
+//		futures.add(requestCache.putAsync(System.nanoTime(), "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.78.2 (KHTML, like Gecko) Version/7.0.6 Safari/537.78.2"));
+//		futures.add(requestCache.putAsync(System.nanoTime(), "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.78.2 (KHTML, like Gecko) Version/7.0.6 Safari/537.78.2"));
+//		futures.add(requestCache.putAsync(System.nanoTime(), "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.78.2 (KHTML, like Gecko) Version/7.0.6 Safari/537.78.2"));
+//		futures.add(requestCache.putAsync(System.nanoTime(), "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.133 Mobile Safari/535.19"));
+//		futures.add(requestCache.putAsync(System.nanoTime(), "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.133 Mobile Safari/535.19"));
+//		futures.add(requestCache.putAsync(System.nanoTime(), "Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A543 Safari/419.3"));
+//		futures.add(requestCache.putAsync(System.nanoTime(), "Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A543 Safari/419.3"));
+//		for (NotifyingFuture<String> notifyingFuture : futures) {
+//			notifyingFuture.get();
+//		}
+//		Assert.assertEquals(7, requestCache.size());
+//		
+//		Map<String,Integer> userOsCount = biservice.getRequestStatiscsPerOs();
+//		
+//		Assert.assertEquals(3, userOsCount.get("Macintosh").intValue());
+//		Assert.assertEquals(2, userOsCount.get("Android").intValue());
+//		Assert.assertEquals(2, userOsCount.get("iPhone").intValue());
+//	}
 
 	private Task generateTestTasks(String title, boolean done) {
 		Task task = new Task();
