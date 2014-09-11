@@ -1,6 +1,7 @@
 package org.jboss.infinispan.demo.rest;
 
 import java.util.Collection;
+import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -11,52 +12,74 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
+import org.infinispan.Cache;
+import org.jboss.infinispan.demo.RequestCache;
 import org.jboss.infinispan.demo.TaskService;
 import org.jboss.infinispan.demo.model.Task;
 
 /**
  * 
  */
+@SuppressWarnings("deprecation")
 @Stateless
 @Path("/tasks")
-public class TaskEndpoint
-{
+public class TaskEndpoint {
 
-   @Inject
-   TaskService taskService;
+	@Inject
+	TaskService taskService;
 	
-   @POST
-   @Consumes("application/json")
-   public Response create(Task task)
-   {
-      taskService.insert(task);
-      return Response.created(UriBuilder.fromResource(TaskEndpoint.class).path(String.valueOf(task.getId())).build()).build();
-   }
+	@Inject
+	@RequestCache
+	private Cache<Long, String> requestCache;
 
-   @GET
-   @Produces("application/json")
-   public Collection<Task> listAll()
-   {
-      return taskService.findAll(); 
-   }
-   
-   @GET
-   @Produces("application/json")
-   @Path("/filter/{value}")
-   public Collection<Task> filter(@PathParam("value") String value)
-   {
-	  return taskService.filter(value);
-   }
+	Logger log = Logger.getLogger(this.getClass().getName());
 
-   @PUT
-   @Path("/{id:[0-9][0-9]*}")
-   @Consumes("application/json")
-   public Response update(@PathParam("id") Long id,Task task)
-   {
-	  taskService.update(task);
-      return Response.noContent().build();
-   }
+
+	@POST
+	@Consumes("application/json")
+	public Response create(Task task, @Context HttpHeaders headers) {
+		requestCache.putAsync(System.nanoTime(),
+				headers.getRequestHeader("user-agent").get(0));
+		taskService.insert(task);
+		return Response.created(
+				UriBuilder.fromResource(TaskEndpoint.class)
+						.path(String.valueOf(task.getId())).build()).build();
+	}
+
+
+	@GET
+	@Produces("application/json")
+	public Collection<Task> listAll(@Context HttpHeaders headers) {
+		requestCache.putAsync(System.nanoTime(),
+				headers.getRequestHeader("user-agent").get(0));
+		return taskService.findAll();
+	}
+
+	
+	@GET
+	@Produces("application/json")
+	@Path("/filter/{value}")
+	public Collection<Task> filter(@PathParam("value") String value,
+			@Context HttpHeaders headers) {
+		requestCache.putAsync(System.nanoTime(),
+				headers.getRequestHeader("user-agent").get(0));
+		return taskService.filter(value);
+	}
+
+	@PUT
+	@Path("/{id:[0-9][0-9]*}")
+	@Consumes("application/json")
+	public Response update(@PathParam("id") Long id, Task task,
+			@Context HttpHeaders headers) {
+		requestCache.putAsync(System.nanoTime(),
+				headers.getRequestHeader("user-agent").get(0));
+		taskService.update(task);
+		return Response.noContent().build();
+	}
+	
 }
