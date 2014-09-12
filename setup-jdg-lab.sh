@@ -96,7 +96,7 @@ pushd ${GIT_PROJECT} > /dev/null
 
 
 
-LABS=(lab1 lab2 lab3 lab4 lab5)
+LABS=(lab1 lab2 lab3 lab4 lab5 lab6)
 
 for lab in ${LABS[*]}
 do

@@ -1,29 +1,19 @@
 # JDG + EAP Lab 2 Guide
 This explains the steps for lab 2, either follow them step-by-step or if you 
-feel adventurous read the overview and try to accomplish goals without the help 
-of the step-by-step guide.
+feel adventurous try to accomplish goals without the help of the step-by-step guide.
 
 ## Background 
 In Lab 1 we implemented a side cache using JDG to speed up reads, but master 
 data store is still the database. So far however the data access is only a using
 the common CRUD (Create, Read, Update and Delete) operations. Since JDG is a 
-key/value store these operations are easy to implement. However what happens if
-we get a requirement for querying? 
+key/value store these operations are easy to implement. 
 
-Well JDG has very competent possibility to do querying in library mode (remote
-is still tech preview, but coming soon)
+A competing vendor that has a similar task management solution released a new feature where users can filter their tasks. Something our customers has been requesting for a while. Our marketing director demands that we ASAP add this feature. An external consultant are hired and to implement this feature, but since he wasn't familiar with JDG he implemented the filter solution using JPA query. This has once again put more load on the database and performance has degraded.
+
+JDG has very advanced querying capabilities in library mode (remote is still tech preview)
 
 ## Use-case
-During your vacation a competing vendor released a has a filter search feature
-that makes it easier to manage allot of tasks. Another developer that wasn't
-familiar with JDG implemented UI for filtering and in the data access
-layer he implemented the filter method as a JPA query. This has once again put 
-more load on the database and to fix this we should migrate to JDG queries
-instead.
-
-However because the Task data model is used in the native mobile application and
-since it will take a while before we can update the mobile application you are 
-nor allowed to change the org.jboss.infinspan.demo.model.Task class.
+You are tasked to rewrite the filter implementation using queries in JDG instead of JPA queries. However the Task data model is used in the native mobile application and since it will take a while before we can update the mobile application you are not allowed to change the org.jboss.infinspan.demo.model.Task class.
 
 ## Objectives
 Your task in Lab 2 re-implement the filtering method, but using JDG Queries. 

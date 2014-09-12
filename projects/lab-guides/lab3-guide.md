@@ -1,7 +1,6 @@
 # JDG + EAP Lab 3 Guide
-This explains the steps for lab 2, either follow them step-by-step or if you 
-feel adventurous read the overview and try to accomplish goals without the help 
-of the step-by-step
+This explains the steps for lab 3, either follow them step-by-step or if you 
+feel adventurous to accomplish the objectives without the help of the step-by-step section.
 
 ## Background 
 In Lab 2 we implemented querying by providing search mapping as to how to index
@@ -16,12 +15,10 @@ mapping close to the model. So similar to JPA, Hibernate Search (which is the
 base for JDG Querying) supports annotation as meta data that describes the 
 search mapping. 
 
-This does require us to have access to the data model source code and that we 
-are allowed to update it. 
+This does requires that we can edit the data model. 
 
 ## Objectives
-You task in Lab 3 is move the search mapping from the configuration object and
-instead provide this as annotations to the data model object.
+Your task in Lab 3 is to move the meta-data/configuration of how to index the Task object from the Config object to instead provide this as annotations to the data model object.
 
 These are the main tasks of lab 3
 
@@ -51,7 +48,22 @@ annotation.
 3. Open `src/main/java/org/jboss/infinispan/demo/model/Task.java`
 4. Add `@org.hibernate.search.annotations.Indexed` as a class modifier
 5. Add `@org.hibernate.search.annotations.Field(store = org.hibernate.search.annotations.Store.YES)
-as the modifier to the `title` field.
+as the modifier to the `private String title` field.
+6. Run the JUnit test to verify that everything works.
+7. Deploy and test the application
+
+		$ mvn package jboss-as:deploy
+		
+8. Congratulations you are done with lab3.
+
+## Summary
+In lab2 and lab3 we can see two different ways to enable searching objects. With properties we do not have to modify the object being indexed and can be a good solution when we for example don't have access to the source code. The other solution with Annotating the object it self is preferable if we have can modify the object. The reason is that it's easier to maintain the indexing meta-data closer to the actual object. When updating an index object developers can also update the indexing.
+
+The search function in JDG is very powerful, in many cases much more powerful then you would find in a typical RDBMS. For example fields can be indexed using different methods enables more advanced queries like sounds like. Note: Complex SQL queries may be hard to migrate to JDG queries and may require that you redesign data models etc. Another possible solution may be to use Map Reduce functions instead, but we will cover that more in another lab. 
+
+
+
+
 
 
 
