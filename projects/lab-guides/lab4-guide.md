@@ -128,7 +128,7 @@ Rewrite the application to only use JDG library mode, configure a file store and
 			cache.put(task.getId(),task);
 		}
 
-with:
+	with:
 
 		public void insert(Task task) {
 			if (task.getCreatedOn() == null)
