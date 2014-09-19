@@ -15,6 +15,23 @@ Rewrite the application to only use JDG library mode, configure a file store and
 2. Configure a file store (using SingleFileStore)
 3. Configure the cache for clustering
 
+### Setup the lab environment
+  To assist with setting up the lab environment we have provided a shell script that does this. 
+
+  1. Run the shell script by standing in the jdg lab root directory (~/jdg-labs) execute a command like this
+
+    	$ sh init-lab.sh --lab=4
+	
+	Start the servers in separate consoles using the following commands
+	
+	Node 1: 
+		
+		$ ./target/node1/jboss-eap-6.3/bin/standalone.sh
+	
+	Node 2:
+		
+		$ ./target/node1/jboss-eap-6.3/bin/standalone.sh -Djboss.socket.binding.port-offset=100
+
 ## Step-by-Step
 
 1. Open `src/main/java/org/jboss/infinispan/demo/TaskService.java` and remove all references to EntityManager. TaskService should look something like this:
@@ -134,11 +151,13 @@ Rewrite the application to only use JDG library mode, configure a file store and
 			if (task.getCreatedOn() == null)
 				task.setCreatedOn(new Date());
 			if(task.getId()==null) {
-				task.setId(new Long(cache.size()+1));
+				task.setId(System.nanoTime());
 			}
 			cache.put(task.getId(), task);
 		}
 		
+	**Note: ** Since our domain model relied on JPA to generate unique id's we will `System.nanoTime()` as id for simplicity reasons, please note that in a clustred environment there are no guarantee that System.nanoTime() will be unique which is a problem. Therefor we do not recommend using this method. Discuss with your collegues how we could solve this in a better way.
+	
 3. Remove JPA references in `src/main/java/org/jboss/infinispan/demo/model/Task.java`. The new Task class should look something like this:
 
 		package org.jboss.infinispan.demo.model;
@@ -288,21 +307,20 @@ Rewrite the application to only use JDG library mode, configure a file store and
 					.shutdownTimeout(25000)
 					
 6. Run the JUnit test to verify that your changes works. 
-7. Add Clustering using CacheMode DIST_ASYNC with 2 owners to Configuration builder.
+7. Add Clustering using CacheMode REPL_SYNC to Configuration builder.
 		
 		...
 		Configuration loc = new ConfigurationBuilder().jmxStatistics()
 					.enable() // Enable JMX statistics
-					.clustering().cacheMode(CacheMode.DIST_ASYNC) 
-					.hash().numOwners(2)
+					.clustering().cacheMode(CacheMode.REPL_SYNC) 
 		...
 
-8. Configure the transport for the cluster by adding `jgroups-udp.xml` to the `GlobalConfigurationBuilder`
+8. Configure the transport for the cluster by adding `jgroups-cluster-config.xml` to the `GlobalConfigurationBuilder`
 
 
 		GlobalConfiguration glob = new GlobalConfigurationBuilder()
 			.clusteredDefault()
-			.transport().addProperty("configurationFile", "jgroups-udp.xml")
+			.transport().addProperty("configurationFile", "jgroups-cluster-config.xml")
 			.globalJmxStatistics().allowDuplicateDomains(true).enable()
 			.build();
 			
@@ -310,8 +328,9 @@ Rewrite the application to only use JDG library mode, configure a file store and
 
 10. Deploy the application and test that everything works as before.
 
-		mvn clean package jboss-as:deploy
-		
+		$ mvn clean package jboss-as:deploy
+		$ mvn clean package jboss-as:deploy -Djboss-as.port=10099
+				
 11. Congratulations you are done with lab 4
 
 
